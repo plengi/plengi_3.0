@@ -20,16 +20,29 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+//PLANTILLA
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;            
-            
+use App\Http\Controllers\ChangePassword;
+//SISTEMA
+use App\Http\Controllers\ProductosController;
 
+            
+Route::group(['middleware' => 'auth'], function () {
+	Route::controller(ProductosController::class)->group(function () {
+		Route::get('/materiales', 'indexMateriales')->name('materiales');
+		Route::get('/materiales-read', 'read')->name('materiales-read');
+		Route::post('/materiales-create', 'create')->name('materiales-create');
+		Route::put('/materiales-update', 'update')->name('materiales-update');
+		Route::delete('/materiales-delete', 'delete')->name('materiales-delete');
+	});
+});
+
+//PLANTILLA
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');

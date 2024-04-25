@@ -19,6 +19,12 @@
     <link href="assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="assets/css/argon-dashboard.css" rel="stylesheet" />
+    <!-- DATATABLE -->
+    <link href="assets/css/sistema/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="assets/css/sistema/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <!-- SELECT 2 -->
+    <link href="assets/css/sistema/select2.min.css" rel="stylesheet" />
+    <link href="assets/css/sistema/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -32,7 +38,7 @@
             @yield('content')
         @else
             @if (!in_array(request()->route()->getName(), ['profile', 'profile-static']))
-                <div class="min-height-300 bg-primary position-absolute w-100"></div>
+                <div style="z-index: -1;" class="min-height-300 bg-primary position-absolute w-100"></div>
             @elseif (in_array(request()->route()->getName(), ['profile-static', 'profile']))
                 <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
                     <span class="mask bg-primary opacity-6"></span>
@@ -45,12 +51,13 @@
             @include('components.fixed-plugin')
         @endif
     @endauth
-
+    
     <!--   Core JS Files   -->
     <script src="assets/js/core/popper.min.js"></script>
     <script src="assets/js/core/bootstrap.min.js"></script>
     <script src="assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="assets/js/sistema/jquery-3.5.1.js"></script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -64,7 +71,21 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="assets/js/argon-dashboard.js"></script>
-    @stack('js');
+    <!-- DATATABLE -->
+    <script src="assets/js/sistema/jquery.dataTables.min.js"></script>
+    <script src="assets/js/sistema/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/sistema/dataTables.responsive.min.js"></script>
+    <script src="assets/js/sistema/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/sistema/dataTables.fixedHeader.min.js"></script>
+    <script src="assets/js/sistema/dataTables.fixedColumns.min.js"></script>
+    <!-- SELECT 2  -->
+    <script src="assets/js/sistema/select2.full.min.js"></script>
+    <!-- VALIDATE -->
+    <script src="assets/js/sistema/jquery.validate.min.js"></script>
+    <!-- sweetalert2 -->
+    <script src="assets/js/sistema/sweetalert2.all.min.js"></script>
+
+    <script src="assets/js/sistema.js"></script>
 </body>
 
 </html>
