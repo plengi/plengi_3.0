@@ -161,7 +161,7 @@ thead tr:first-child th {
 }
 
 .footer-navigation .nav-item .nav-link.active {
-    background-color: #05434e !important;
+    background-color: #003883 !important;
     color: white;
     cursor: context-menu;
 }
