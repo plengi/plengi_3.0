@@ -10,9 +10,16 @@ use App\Models\Productos;
 
 class ProductosController extends Controller
 {
+
     public function indexMateriales (Request $request)
     {
         return view('sistema.materiales.materiales-view');
+    }
+
+    //view equipos
+    public function indexEquipos (Request $request)
+    {
+        return view('sistema.equipos.equipos-view');
     }
 
     public function read (Request $request)
@@ -105,4 +112,7 @@ class ProductosController extends Controller
             'message'=> 'Producto eliminado con exito!'
         ]);
     }
+
+
+
 }

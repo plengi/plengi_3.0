@@ -31,16 +31,26 @@ use App\Http\Controllers\ChangePassword;
 //SISTEMA
 use App\Http\Controllers\ProductosController;
 
-            
+
 Route::group(['middleware' => 'auth'], function () {
 	Route::controller(ProductosController::class)->group(function () {
+        //MATERIALES
 		Route::get('/materiales', 'indexMateriales')->name('materiales');
 		Route::get('/materiales-read', 'read')->name('materiales-read');
 		Route::post('/materiales-create', 'create')->name('materiales-create');
 		Route::put('/materiales-update', 'update')->name('materiales-update');
 		Route::delete('/materiales-delete', 'delete')->name('materiales-delete');
+
+        //EQUIPOS
+        Route::get('/equipos', 'indexEquipos')->name('equipos');
+        Route::get('/equipos-read', 'read')->name('equipos-read');
+        Route::post('/equipos-create', 'create')->name('equipos-create');
+        Route::put('/equipos-update', 'update')->name('equipos-update');
+		Route::delete('/equipos-delete', 'delete')->name('equipos-delete');
 	});
 });
+
+
 
 //PLANTILLA
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
@@ -58,9 +68,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
-	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
+	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
-	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
+	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
