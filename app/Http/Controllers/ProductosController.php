@@ -16,10 +16,14 @@ class ProductosController extends Controller
         return view('sistema.materiales.materiales-view');
     }
 
-    //view equipos
     public function indexEquipos (Request $request)
     {
         return view('sistema.equipos.equipos-view');
+    }
+
+    public function indexManoObras (Request $request)
+    {
+        return view('sistema.mano-obras.mano-obras-view');
     }
 
     public function read (Request $request)
