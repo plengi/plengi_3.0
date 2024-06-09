@@ -117,6 +117,20 @@ class ProductosController extends Controller
         ]);
     }
 
+    public function combo (Request $request)
+    {
+        $productos = Productos::select(
+            \DB::raw('*'),
+            \DB::raw("CONCAT(nombre, ' - ', unidad_medida, ' - ', valor) as text")
+        );
+
+        if ($request->get("search")) {
+            $productos->where('nombre', 'LIKE', '%' . $request->get("search") . '%');
+        }
+
+        return $productos->paginate(40);
+    }
+
 
 
 }

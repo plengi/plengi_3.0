@@ -29,10 +29,21 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 //SISTEMA
+use App\Http\Controllers\APUController;
 use App\Http\Controllers\ProductosController;
 
 
 Route::group(['middleware' => 'auth'], function () {
+
+	//APU
+	Route::controller(APUController::class)->group(function () {
+		Route::get('/apu', 'index')->name('apu');
+		Route::post('/apu', 'create');
+		Route::put('/apu', 'update');
+		Route::get('/apu-read', 'read');
+
+	});
+
 	Route::controller(ProductosController::class)->group(function () {
         //MATERIALES
 		Route::get('/materiales', 'indexMateriales')->name('materiales');
@@ -54,6 +65,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/mano-obras-create', 'create')->name('mano-obras-create');
         Route::put('/mano-obras-update', 'update')->name('mano-obras-update');
 		Route::delete('/mano-obras-delete', 'delete')->name('mano-obras-delete');
+
+		Route::get('/productos-combo', 'combo');
+
 	});
 });
 
