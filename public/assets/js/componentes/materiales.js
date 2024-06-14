@@ -48,6 +48,7 @@ materiales_table = $('#materialesTable').DataTable({
         },
         url: 'materiales-read',
         data: function ( d ) {
+            d.tipo_producto = 0,
             d.search = searchValueMaterial;
         }
     },

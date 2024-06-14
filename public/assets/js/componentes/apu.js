@@ -154,6 +154,52 @@ apu_table.on('click', '.edit-apu', function() {
     $("#create-apu-component").show();
 });
 
+apu_table.on('click', '.drop-apu', function() {
+    var trApu = $(this).closest('tr');
+    var id = this.id.split('_')[1];
+    var data = getDataById(id, apu_table);
+
+    Swal.fire({
+        title: 'Eliminar APU: '+data.nombre+'?',
+        text: "No se podrá revertir!",
+        type: 'warning',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Borrar!',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.value){
+            $.ajax({
+                url: 'apu-delete',
+                method: 'DELETE',
+                data: JSON.stringify({id: id}),
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+            }).done((res) => {
+                apu_table.row(trApu).remove().draw();
+                Swal.fire({
+                    title: "Apu eliminado!",
+                    text: "El material "+data.nombre+" fue eliminado con exito!",
+                    icon: "success",
+                    timer: 1500
+                })
+            }).fail((res) => {
+                Swal.fire({
+                    title: "Error!",
+                    text: "El apu "+data.nombre+" no pudo ser eliminado!",
+                    icon: "error",
+                    timer: 1500
+                });
+            });
+        }
+    });
+});
+
 apu_table.ajax.reload();
 
 var id_materiales = 0;
@@ -177,7 +223,7 @@ function volverAPU () {
     $("#actions-apu-create").hide();
     $("#create-apu-component").hide();
 
-
+    apu_table.ajax.reload();
 }
 
 $(document).on('click', '#crearApu', function () {
@@ -235,6 +281,7 @@ $(document).on('click', '#crearApu', function () {
 });
 
 $(document).on('click', '#actualizarApu', function () {
+    console.log('actualizarApu');
     var form = document.querySelector('#apuForm');
 
     if(!form.checkValidity()){
@@ -269,8 +316,8 @@ $(document).on('click', '#actualizarApu', function () {
             $("#crearApuLoading").hide();
             volverAPU();
             Swal.fire({
-                title: "APU creado!",
-                text: "El APU fue creado con exito!",
+                title: "APU actualizado!",
+                text: "El APU fue actualizado con exito!",
                 icon: "success",
                 timer: 1500
             });
@@ -281,7 +328,7 @@ $(document).on('click', '#actualizarApu', function () {
         $("#crearApuLoading").hide();
         Swal.fire({
             title: "Error!",
-            text: "Error al crear nuevo APU!",
+            text: "Error al actualizar APU!",
             icon: "error",
             timer: 1500
         });
@@ -328,22 +375,38 @@ function getProductos () {
 }
 
 function calcularProducto (tipo, consecutivo) {
+    console.log('tipo: ',tipo);
+    console.log('arrayProductos: ',arrayProductos);
+    console.log('consecutivo: ',consecutivo);
     var index = encontrarIndex(arrayProductos[tipo], consecutivo);
     var data = arrayProductos[tipo][index];
     
     var cantidad = $("#cantidad_"+tipo+"_"+consecutivo).val();
     var desperdicio = $("#desperdicio_"+tipo+"_"+consecutivo).val();
 
-    var totalDesperdicio = data.costo * (desperdicio / 100);
-    var totalProducto = cantidad * (data.costo + totalDesperdicio);
-
-    $("#costo_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE').format(
-        data.costo + totalDesperdicio
-    ));
-
-    $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE').format(
-        totalProducto
-    ));
+    if (tipo == 'materiales') {
+        var totalDesperdicio = data.costo * (desperdicio / 100);
+        var totalProducto = cantidad * (data.costo + totalDesperdicio);
+    
+        $("#costo_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE').format(
+            data.costo + totalDesperdicio
+        ));
+    
+        $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE').format(
+            totalProducto
+        ));
+    } else {
+        var totalCosto = data.costo * (desperdicio / 100);
+        var totalProducto = cantidad * totalCosto;
+        
+        $("#costo_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE').format(
+            totalCosto
+        ));
+    
+        $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE').format(
+            totalProducto
+        ));
+    }
 
     arrayProductos[tipo][index].cantidad = cantidad;
     arrayProductos[tipo][index].porcentaje_desperdicio = desperdicio;
@@ -373,11 +436,11 @@ function addItemToTable (data, tipo) {
         </td>
         <td>${data.nombre_producto}</td>
         <td style="padding: 3px 0px;">
-            <input type="number" style="text-align: end;" class="form-control form-control-sm" id="cantidad_${tipo}_${data.consecutivo}" value="1" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            <input type="number" style="text-align: end;" class="form-control form-control-sm" id="cantidad_${tipo}_${data.consecutivo}" value="${data.cantidad}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
         </td>
         <td>${data.unidad_medida.toUpperCase()}</td>
         <td style="padding: 3px 0px;">
-            <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="0" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_desperdicio}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
         </td>
         <td id="costo_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
             data.costo,
@@ -434,10 +497,10 @@ function calcularTotalesProductos () {
             var element = arrayProductos['equipos'][index];
             var cantidad = $("#cantidad_equipos_"+element.consecutivo).val();
             var desperdicio = $("#desperdicio_equipos_"+element.consecutivo).val();
-            var totalDesperdicio = element.costo * (desperdicio / 100);
-            var totalProducto = cantidad * (element.costo + totalDesperdicio);
+            var totalCosto = element.costo * (desperdicio / 100);
+            var totalProducto = cantidad * totalCosto;
             totales.equipos.cantidad+= parseFloat(cantidad);
-            totales.equipos.costo+= parseFloat(element.costo + totalDesperdicio);
+            totales.equipos.costo+= parseFloat(totalCosto);
             totales.equipos.total+= parseFloat(totalProducto);
         }
         
@@ -459,12 +522,15 @@ function calcularTotalesProductos () {
     if (arrayProductos['mano_obra'].length) {
         for (let index = 0; index < arrayProductos['mano_obra'].length; index++) {
             var element = arrayProductos['mano_obra'][index];
-            var cantidad = $("#cantidad_equipos_"+element.consecutivo).val();
-            var desperdicio = $("#desperdicio_equipos_"+element.consecutivo).val();
-            var totalDesperdicio = element.costo * (desperdicio / 100);
-            var totalProducto = cantidad * (element.costo + totalDesperdicio);
+            var cantidad = $("#cantidad_mano_obra_"+element.consecutivo).val();
+            var desperdicio = $("#desperdicio_mano_obra_"+element.consecutivo).val();
+            var totalCosto = element.costo * (desperdicio / 100);
+            var totalProducto = cantidad * totalCosto;
+            console.log('cantidad: ',cantidad);
+            console.log('desperdicio: ',desperdicio);
+            console.log('totalCosto: ',totalCosto);
             totales.mano_obra.cantidad+= parseFloat(cantidad);
-            totales.mano_obra.costo+= parseFloat(element.costo + totalDesperdicio);
+            totales.mano_obra.costo+= parseFloat(element.costo + totalCosto);
             totales.mano_obra.total+= parseFloat(totalProducto);
         }
         
@@ -481,9 +547,7 @@ function calcularTotalesProductos () {
         $("#cantidad_total_manoobra").text();
         $("#costo_total_manoobra").text();
         $("#valor_total_manoobra").text();
-    }
-
-    
+    }    
 
     $("#cantidad_total_apu").text(new Intl.NumberFormat('de-DE').format(
         totales.equipos.cantidad + totales.mano_obra.cantidad + totales.materiales.cantidad
@@ -547,9 +611,11 @@ $(function () {
         ajax: {
             url: 'productos-combo',
             dataType: 'json',
+
             data: function (params) {
                 var query = {
-                    search: params.term
+                    search: params.term,
+                    tipo_producto: $("#tipo_recurso").val(),
                 }
                 return query;
             },
@@ -565,6 +631,7 @@ $(function () {
         var dataProducto = $('#id_producto').select2('data');
         if (dataProducto && dataProducto.length) {
             dataProducto = dataProducto[0];
+
             if (dataProducto.tipo_producto == 0) {
                 id_materiales++;
                 var data = {
@@ -585,14 +652,14 @@ $(function () {
             if (dataProducto.tipo_producto == 1) {
                 id_equipos++;
                 var data = {
-                    'consecutivo': id_materiales,
+                    'consecutivo': id_equipos,
                     'id_producto': parseInt(dataProducto.id),
                     'nombre_producto': dataProducto.nombre,
                     'unidad_medida': dataProducto.unidad_medida,
                     'cantidad': 1,
                     'unidad_medida': dataProducto.unidad_medida,
                     'costo': parseFloat(dataProducto.valor),
-                    'porcentaje_desperdicio': 0,
+                    'porcentaje_desperdicio': 100,
                     'costo_total': parseFloat(dataProducto.valor)
                 }
                 arrayProductos.equipos.push(data);
@@ -602,17 +669,17 @@ $(function () {
             if (dataProducto.tipo_producto == 2) {
                 id_manos++;
                 var data = {
-                    'consecutivo': id_materiales,
+                    'consecutivo': id_manos,
                     'id_producto': parseInt(dataProducto.id),
                     'nombre_producto': dataProducto.nombre,
                     'unidad_medida': dataProducto.unidad_medida,
                     'cantidad': 1,
                     'unidad_medida': dataProducto.unidad_medida,
                     'costo': parseFloat(dataProducto.valor),
-                    'porcentaje_desperdicio': 0,
+                    'porcentaje_desperdicio': 100,
                     'costo_total': parseFloat(dataProducto.valor)
                 }
-                arrayProductos.mano_obra.push();
+                arrayProductos.mano_obra.push(data);
                 addItemToTable(data, 'mano_obra');
             }
 

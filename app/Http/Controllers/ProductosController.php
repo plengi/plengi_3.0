@@ -47,6 +47,10 @@ class ProductosController extends Controller
                 $productos->where('nombre', 'LIKE', '%'.$request->get('search').'%');
             }
 
+            if ($request->get("tipo_producto") == "0" || $request->get("tipo_producto")) {
+                $productos->where('tipo_producto', $request->get("tipo_producto"));
+            }
+
             $productosTotals = $productos->get();
 
             $productosPaginate = $productos->skip($start)
@@ -126,6 +130,10 @@ class ProductosController extends Controller
 
         if ($request->get("search")) {
             $productos->where('nombre', 'LIKE', '%' . $request->get("search") . '%');
+        }
+
+        if ($request->get("tipo_producto") == "0" || $request->get("tipo_producto")) {
+            $productos->where('tipo_producto', $request->get("tipo_producto"));
         }
 
         return $productos->paginate(40);

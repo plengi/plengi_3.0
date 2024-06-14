@@ -48,6 +48,7 @@ equipos_table = $('#equiposTable').DataTable({
         },
         url: 'equipos-read',
         data: function ( d ) {
+            d.tipo_producto = 1,
             d.search = searchValueEquipo;
         }
     },

@@ -105,22 +105,22 @@ class APUController extends Controller
 
         $totalAPU = 0;
         $productos = $request->get('productos');
-
+        
         if ($productos) {
             foreach ($productos as $producto) {
                 $producto = (object)$producto;
-                $totalAPU+= $producto->costo_total;
+                $totalAPU+= $producto->costo * $producto->cantidad;
                 ApuDetalle::create([
                     'id_apu' => $apu->id,
                     'id_producto' => $producto->id_producto,
                     'cantidad' => $producto->cantidad,
                     'costo' => $producto->costo,
                     'desperdicio' => $producto->porcentaje_desperdicio,
-                    'total' => $producto->costo_total,
+                    'total' => $producto->costo * $producto->cantidad,
                 ]);
             }
         }
-
+        
         $apu->valor_total = $totalAPU;
         $apu->save();
 
@@ -166,14 +166,14 @@ class APUController extends Controller
         if ($productos) {
             foreach ($productos as $producto) {
                 $producto = (object)$producto;
-                $totalAPU+= $producto->costo_total;
+                $totalAPU+= $producto->costo * $producto->cantidad;
                 ApuDetalle::create([
                     'id_apu' => $apu->id,
                     'id_producto' => $producto->id_producto,
                     'cantidad' => $producto->cantidad,
                     'costo' => $producto->costo,
                     'desperdicio' => $producto->porcentaje_desperdicio,
-                    'total' => $producto->costo_total,
+                    'total' => $producto->costo * $producto->cantidad,
                 ]);
             }
         }
@@ -185,6 +185,17 @@ class APUController extends Controller
             'success'=>	true,
             'data' => $apu,
             'message'=> 'APU actualizado con exito!'
+        ]);
+    }
+
+    public function delete (Request $request)
+    {
+        Apu::where('id', $request->get('id'))->delete();
+        ApuDetalle::where('id_apu', $request->get('id'))->delete();
+
+        return response()->json([
+            'success'=>	true,
+            'message'=> 'Apu eliminado con exito!'
         ]);
     }
 

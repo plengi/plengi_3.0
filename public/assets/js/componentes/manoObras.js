@@ -48,6 +48,7 @@ manoObras_table = $('#manoObrasTable').DataTable({
         },
         url: 'mano-obras-read',
         data: function ( d ) {
+            d.tipo_producto = 2,
             d.search = searchValueManoObra;
         }
     },

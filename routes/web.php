@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('/apu', 'create');
 		Route::put('/apu', 'update');
 		Route::get('/apu-read', 'read');
+		Route::delete('/apu-delete', 'delete');
 
 	});
 

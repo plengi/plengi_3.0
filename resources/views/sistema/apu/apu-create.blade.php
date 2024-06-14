@@ -65,7 +65,7 @@
                         <th class="table-dark" scope="col">Nombre</th>
                         <th class="table-dark" scope="col">Cantidad</th>
                         <th class="table-dark" scope="col">Unidad</th>
-                        <th class="table-dark" scope="col">Desperdicio / <br/> Rendimiento</th>
+                        <th class="table-dark" scope="col">Tipo</th>
                         <th class="table-dark" scope="col">Costo item</th>
                         <th class="table-dark" scope="col" style="border-radius: 0px 10px 0px 0px; border: white;">Costo total</th>
                     </tr>
@@ -113,10 +113,10 @@
                     <tr style="font-size: 12px; overflow: auto;">
                         <th style="padding: 0.5rem 1.5rem;" class="table-success" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem;" class="table-success" scope="col">TOTAL MATERIALES</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col" id="cantidad_total_materiales">0</th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col" id="costo_total_materiales">0</th>
+                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col">% DESPERDICIO</th>
+                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col" id="costo_total_materiales"></th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col" id="valor_total_materiales">0</th>
                     </tr>
                 </thead>
@@ -155,10 +155,10 @@
                     <tr style="font-size: 12px; overflow: auto;">
                         <th style="padding: 0.5rem 1.5rem;" class="table-warning" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem;" class="table-warning" scope="col">TOTAL EQUIPOS</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col" id="cantidad_total_equipos">0</th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col" id="costo_total_equipos">0</th>
+                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col">% RENDIMIENTO</th>
+                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col" id="valor_total_equipos">0</th>
                     </tr>
                 </thead>
@@ -197,10 +197,10 @@
                     <tr style="font-size: 12px; overflow: auto;">
                         <th style="padding: 0.5rem 1.5rem; background-color: #d5d5f5;" class="table-primary" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem; background-color: #d5d5f5;" class="table-primary" scope="col">TOTAL MANOS DE OBRA</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" id="cantidad_total_manoobra">0</th>
+                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col"></th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" ></th>
+                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" >% RENDIMIENTO</th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" ></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" id="costo_total_manoobra">0</th>
                         <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" id="valor_total_manoobra">0</th>
                     </tr>
                 </thead>
