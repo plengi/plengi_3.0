@@ -549,9 +549,9 @@ function calcularTotalesProductos () {
         $("#valor_total_manoobra").text();
     }    
 
-    $("#cantidad_total_apu").text(new Intl.NumberFormat('de-DE').format(
-        totales.equipos.cantidad + totales.mano_obra.cantidad + totales.materiales.cantidad
-    ));
+    // $("#cantidad_total_apu").text(new Intl.NumberFormat('de-DE').format(
+    //     totales.equipos.cantidad + totales.mano_obra.cantidad + totales.materiales.cantidad
+    // ));
     $("#costo_total_apu").text(new Intl.NumberFormat('de-DE').format(
         totales.equipos.costo + totales.mano_obra.costo + totales.materiales.costo
     ));

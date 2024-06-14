@@ -209,10 +209,10 @@
                     <tr>
                         <td class="table-dark" scope="col">TOTALES</td>
                         <td class="table-dark" scope="col"></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" id="cantidad_total_apu">0</td>
+                        <td class="table-dark" scope="col" style="text-align: end;" id="cantidad_total_apu"></td>
                         <td class="table-dark" scope="col" style="text-align: end;" ></td>
                         <td class="table-dark" scope="col" style="text-align: end;" ></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" id="costo_total_apu">0</td>
+                        <td class="table-dark" scope="col" style="text-align: end;" id="costo_total_apu"></td>
                         <td class="table-dark" scope="col" style="text-align: end;" id="valor_total_apu">0</td>
                     </tr>
                 </tfoot>
