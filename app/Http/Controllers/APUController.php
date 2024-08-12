@@ -111,6 +111,7 @@ class APUController extends Controller
         if ($productos) {
             foreach ($productos as $producto) {
                 $producto = (object)$producto;
+                // dd( $producto);
                 ApuDetalle::create([
                     'id_apu' => $apu->id,
                     'id_producto' => $producto->id_producto,
@@ -118,7 +119,7 @@ class APUController extends Controller
                     'cantidad_total' => $producto->cantidad_total,
                     'costo' => $producto->costo,
                     'desperdicio' => $producto->porcentaje_desperdicio,
-                    'rendimiento' => $producto->porcentaje_desperdicio,
+                    'rendimiento' => $producto->porcentaje_rendimiento,
                     'total' => $producto->costo_total,
                 ]);
             }
@@ -175,7 +176,7 @@ class APUController extends Controller
                     'cantidad_total' => $producto->cantidad_total,
                     'costo' => $producto->costo,
                     'desperdicio' => $producto->porcentaje_desperdicio,
-                    'rendimiento' => $producto->porcentaje_desperdicio,
+                    'rendimiento' => $producto->porcentaje_rendimiento,
                     'total' => $producto->costo_total,
                 ]);
             }

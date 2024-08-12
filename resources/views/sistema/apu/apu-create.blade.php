@@ -133,8 +133,9 @@
                     <tr style="background-color: #4d2dce; color: white;">
                         <th style="border-radius: 15px 0px 0px 0px !important;">MANO OBRA</th>
                         <th>Cantidad</th>
-                        <th>Unidad</th>
-                        <th>Tarifa</th>
+                        <th>Salario</th>
+                        <th>Prestaciones</th>
+                        <th>Salario total</th>
                         <th>Rendimiento</th>
                         <th>Valor total</th>
                         <th style="border-radius: 0px 15px 0px 0px !important;">Acciones</th>
@@ -146,6 +147,7 @@
 
                 <tfoot style="font-size: 14px; font-weight: bold;">
                     <tr style="background-color: #d5c3e4;">
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

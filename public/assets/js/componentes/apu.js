@@ -104,15 +104,17 @@ apu_table.on('click', '.edit-apu', function() {
         var productos = data.detalles
         for (let index = 0; index < productos.length; index++) {
             var producto = productos[index];
+            console.log('producto: ',producto);
             if (producto.producto.tipo_producto == 0) {
-                console.log(producto);
+
                 id_materiales++;
                 var data = {
                     'consecutivo': id_materiales,
-                    'id_producto': parseInt(producto.id),
+                    'id_producto': producto.producto.id,
                     'nombre_producto': producto.producto.nombre,
                     'unidad_medida': producto.producto.unidad_medida,
                     'cantidad': producto.cantidad,
+                    'prestaciones': 0,
                     'cantidad_total': producto.cantidad_total,
                     'costo_unitario': parseFloat(producto.costo),
                     'costo': parseFloat(producto.costo),
@@ -128,10 +130,11 @@ apu_table.on('click', '.edit-apu', function() {
                 id_equipos++;
                 var data = {
                     'consecutivo': id_equipos,
-                    'id_producto': parseInt(producto.id),
+                    'id_producto': producto.producto.id,
                     'nombre_producto': producto.producto.nombre,
                     'unidad_medida': producto.producto.unidad_medida,
                     'cantidad': producto.cantidad,
+                    'prestaciones': 0,
                     'cantidad_total': producto.cantidad_total,
                     'costo_unitario': parseFloat(producto.costo),
                     'costo': parseFloat(producto.costo),
@@ -145,12 +148,14 @@ apu_table.on('click', '.edit-apu', function() {
 
             if (producto.producto.tipo_producto == 2) {
                 id_manos++;
+                var prestaciones = 1.83;
                 var data = {
                     'consecutivo': id_manos,
-                    'id_producto': parseInt(producto.id),
+                    'id_producto': producto.producto.id,
                     'nombre_producto': producto.producto.nombre,
                     'unidad_medida': producto.producto.unidad_medida,
                     'cantidad': producto.cantidad,
+                    'prestaciones': prestaciones,
                     'cantidad_total': producto.cantidad_total,
                     'costo_unitario': parseFloat(producto.costo),
                     'costo': parseFloat(producto.costo),
@@ -164,68 +169,6 @@ apu_table.on('click', '.edit-apu', function() {
         }
         calcularTotalesProductos();
     }
-    
-
-    // if (data.detalles.length) {
-    //     var productos = data.detalles
-    //     for (let index = 0; index < productos.length; index++) {
-    //         var producto = productos[index];
-
-    //         if (producto.producto.tipo_producto == 0) {
-    //             id_materiales++;
-    //             var data = {
-    //                 'consecutivo': id_materiales,
-    //                 'id_producto': parseInt(producto.producto.id),
-    //                 'nombre_producto': producto.producto.nombre,
-    //                 'unidad_medida': producto.producto.unidad_medida,
-    //                 'cantidad': producto.cantidad,
-    //                 'unidad_medida': producto.producto.unidad_medida,
-    //                 'costo': parseFloat(producto.costo),
-    //                 'porcentaje_desperdicio': parseFloat(producto.desperdicio),
-    //                 'costo_total': parseFloat(producto.total)
-    //             }
-    //             arrayProductos.materiales.push(data);
-    //             addItemToTable(data, 'materiales');
-    //         }
-
-    //         if (producto.producto.tipo_producto == 1) {
-    //             id_equipos++;
-    //             var data = {
-    //                 'consecutivo': id_equipos,
-    //                 'id_producto': parseInt(producto.producto.id),
-    //                 'nombre_producto': producto.producto.nombre,
-    //                 'unidad_medida': producto.producto.unidad_medida,
-    //                 'cantidad': producto.cantidad,
-    //                 'unidad_medida': producto.producto.unidad_medida,
-    //                 'costo': parseFloat(producto.costo),
-    //                 'porcentaje_desperdicio': parseFloat(producto.desperdicio),
-    //                 'costo_total': parseFloat(producto.total)
-    //             }
-    //             arrayProductos.equipos.push(data);
-    //             addItemToTable(data, 'equipos');
-    //         }
-
-    //         if (producto.producto.tipo_producto == 2) {
-    //             id_manos++;
-    //             var data = {
-    //                 'consecutivo': id_manos,
-    //                 'id_producto': parseInt(producto.producto.id),
-    //                 'nombre_producto': producto.producto.nombre,
-    //                 'unidad_medida': producto.producto.unidad_medida,
-    //                 'cantidad': producto.cantidad,
-    //                 'unidad_medida': producto.producto.unidad_medida,
-    //                 'costo': parseFloat(producto.costo),
-    //                 'porcentaje_desperdicio': parseFloat(producto.desperdicio),
-    //                 'costo_total': parseFloat(producto.total)
-    //             }
-    //             arrayProductos.mano_obra.push();
-    //             addItemToTable(data, 'mano_obra');
-    //         }
-    //     }
-
-    //     $('#id_producto').val('').trigger('change');
-    //     calcularTotalesProductos();
-    // }
 
     $("#actions-apu-component").hide();
     $("#table-apu-component").hide();
@@ -367,7 +310,7 @@ $(document).on('click', '#actualizarApu', function () {
         varlor_total: totalGeneralApu,
         productos: getProductos()
     }
-    console.log(data);
+    
     $.ajax({
         url: 'apu',
         method: 'PUT',
@@ -443,13 +386,9 @@ function getProductos () {
 }
 
 function calcularProducto (tipo, consecutivo) {
-    console.log('tipo: ',tipo);
-    console.log('arrayProductos: ',arrayProductos);
-    console.log('consecutivo: ',consecutivo);
+    
     var index = encontrarIndex(arrayProductos[tipo], consecutivo);
     var data = arrayProductos[tipo][index];
-    console.log('index: ',index);
-    console.log('data: ',data);
     
     var cantidad = parseInt($("#cantidad_"+tipo+"_"+consecutivo).val());
 
@@ -470,7 +409,7 @@ function calcularProducto (tipo, consecutivo) {
         var desperdicio = parseInt($("#desperdicio_"+tipo+"_"+consecutivo).val());
         var cantidadTotal = desperdicio ? cantidad + (cantidad * (desperdicio / 100)) : cantidad;
         var totalMaterial = cantidadTotal * data.costo;
-        console.log('cantidadTotal: ',cantidadTotal);
+
         $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
             totalMaterial
         ));
@@ -487,7 +426,7 @@ function calcularProducto (tipo, consecutivo) {
 
     if (tipo == 'mano_obra') {
         var rendimiento = $("#desperdicio_"+tipo+"_"+consecutivo).val();
-        var totalEquipo = (cantidad * data.costo) / rendimiento;
+        var totalEquipo = (cantidad * data.costo_unitario) / rendimiento;
 
         $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
             totalEquipo
@@ -547,7 +486,6 @@ function encontrarIndex (array, id) {
 }
 
 function addItemToTable (data, tipo) {
-    console.log(data);
     if (tipo == 'equipos') {
         var html = `
             <td>${data.nombre_producto}</td>
@@ -605,9 +543,14 @@ function addItemToTable (data, tipo) {
             <td style="padding: 3px 0px;">
                 <input type="number" style="text-align: end;" class="form-control form-control-sm" id="cantidad_${tipo}_${data.consecutivo}" value="${data.cantidad}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
             </td>
-            <td>${data.unidad_medida.toUpperCase()}</td>
-            <td id="costo_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+            <td>${new Intl.NumberFormat('de-DE').format(
                 data.costo,
+            )}</td>
+            <td id="costo_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+                data.prestaciones,
+            )}</td>
+            <td id="costo_unitario_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+                data.costo_unitario,
             )}</td>
             <td style="padding: 3px 0px;">
                 <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
@@ -706,7 +649,6 @@ $(function () {
         var dataProducto = $('#id_producto').select2('data');
         if (dataProducto && dataProducto.length) {
             dataProducto = dataProducto[0];
-            console.log('dataProducto: ',dataProducto);
 
             if (dataProducto.tipo_producto == 0) {
                 id_materiales++;
@@ -716,6 +658,7 @@ $(function () {
                     'nombre_producto': dataProducto.nombre,
                     'unidad_medida': dataProducto.unidad_medida,
                     'cantidad': 1,
+                    'prestaciones': 0,
                     'cantidad_total': 1,
                     'costo_unitario': parseFloat(dataProducto.valor),
                     'costo': parseFloat(dataProducto.valor),
@@ -735,12 +678,14 @@ $(function () {
                     'nombre_producto': dataProducto.nombre,
                     'unidad_medida': dataProducto.unidad_medida,
                     'cantidad': 1,
+                    'prestaciones': 0,
                     'cantidad_total': 1,
                     'costo_unitario': parseFloat(dataProducto.valor),
                     'costo': parseFloat(dataProducto.valor),
                     'porcentaje_desperdicio': 0,
                     'porcentaje_rendimiento': 1,
                     'costo_total': parseFloat(dataProducto.valor)
+
                 }
                 arrayProductos.equipos.push(data);
                 addItemToTable(data, 'equipos');
@@ -748,18 +693,20 @@ $(function () {
 
             if (dataProducto.tipo_producto == 2) {
                 id_manos++;
+                var prestaciones = 1.83;
                 var data = {
                     'consecutivo': id_manos,
                     'id_producto': parseInt(dataProducto.id),
                     'nombre_producto': dataProducto.nombre,
                     'unidad_medida': dataProducto.unidad_medida,
                     'cantidad': 1,
+                    'prestaciones': 1.83,
                     'cantidad_total': 1,
-                    'costo_unitario': parseFloat(dataProducto.valor),
+                    'costo_unitario': parseFloat(dataProducto.valor) * 1.83,
                     'costo': parseFloat(dataProducto.valor),
                     'porcentaje_desperdicio': 0,
                     'porcentaje_rendimiento': 1,
-                    'costo_total': parseFloat(dataProducto.valor)
+                    'costo_total': prestaciones * parseFloat(dataProducto.valor)
                 }
                 arrayProductos.mano_obra.push(data);
                 addItemToTable(data, 'mano_obra');
