@@ -56,168 +56,69 @@
 
     <div class="card mb-4">
         <div class="card-body" style="overflow: auto;">
-
-            <table class="table table-responsive table-hover table-bordered">
-                <!-- HEADER PRINCIPAL -->
+            <!-- TABLA DE EQUIPOS -->
+            <table id="apuEquipos" class="table table-bordered display responsive" width="100%">
                 <thead>
-                    <tr>
-                        <th class="table-dark" scope="col" style="border-radius: 10px 0px 0px 0px; border: white;">#</th>
-                        <th class="table-dark" scope="col">Nombre</th>
-                        <th class="table-dark" scope="col">Cantidad</th>
-                        <th class="table-dark" scope="col">Unidad</th>
-                        <th class="table-dark" scope="col">Tipo</th>
-                        <th class="table-dark" scope="col">Costo item</th>
-                        <th class="table-dark" scope="col" style="border-radius: 0px 10px 0px 0px; border: white;">Costo total</th>
+                    <tr style="background-color: #2dce89; color: white;">
+                        <th style="border-radius: 15px 0px 0px 0px !important;">EQUIPO</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Tarifa</th>
+                        <th>Rendimiento</th>
+                        <th>Valor total</th>
+                        <th style="border-radius: 0px 15px 0px 0px !important;">Acciones</th>
                     </tr>
                 </thead>
-                <!-- MATERIALES -->
-
-                <tbody id="items-materiales" style="font-size: 13px;" class="table-group-divider">
-                    <!-- <tr>
-                        <td style="text-align: -webkit-center;">
-                            <span class="btn badge bg-gradient-danger drop-row-grid" onclick="deleteProductoVenta()" id="delete-material_" style="margin-bottom: 0;">
-                                <i class="fas fa-trash-alt"></i>
-                            </span>
-                        </td>
-                        <td>Nombre</td>
-                        <td style="padding: 3px 0px;">
-                            <input type="number" class="form-control form-control-sm" id="cantidad_material_" onfocus="this.select();">
-                        </td>
-                        <td>Unidad</td>
-                        <td style="padding: 3px 0px;">
-                            <input type="number" class="form-control form-control-sm" id="cantidad_material_" onfocus="this.select();">
-                        </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr> -->
-                </tbody>
-                <thead id="footer-materiales" style="border: hidden;">
-                    <tr style="font-size: 12px; overflow: auto;">
-                        <th style="padding: 0.5rem 1.5rem;" class="table-success" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem;" class="table-success" scope="col">TOTAL MATERIALES</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col">% DESPERDICIO</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col" id="costo_total_materiales"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-success" scope="col" id="valor_total_materiales">0</th>
-                    </tr>
-                </thead>
-                <!-- EQUIPO -->
 
                 <tbody id="items-equipos" style="font-size: 13px;" class="table-group-divider">
-                    <!-- <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr> -->
                 </tbody>
-                <thead id="footer-equipos" style="border: hidden;">
-                    <tr style="font-size: 12px; overflow: auto;">
-                        <th style="padding: 0.5rem 1.5rem;" class="table-warning" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem;" class="table-warning" scope="col">TOTAL EQUIPOS</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col">% RENDIMIENTO</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end;" class="table-warning" scope="col" id="valor_total_equipos">0</th>
-                    </tr>
-                </thead>
-                <!-- MANO DE OBRA -->
 
-                <tbody id="items-mano_obra" style="font-size: 13px;" class="table-group-divider">
-                    <!-- <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td>Nombre</td>
-                        <td>Cantidad</td>
-                        <td>Unidad</td>
-                        <td>Desperdicio </td>
-                        <td>Costo item</td>
-                        <td>Costo total</td>
-                    </tr> -->
-                </tbody>
-                <thead id="footer-mano_obra" style="border: hidden;">
-                    <tr style="font-size: 12px; overflow: auto;">
-                        <th style="padding: 0.5rem 1.5rem; background-color: #d5d5f5;" class="table-primary" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; background-color: #d5d5f5;" class="table-primary" scope="col">TOTAL MANOS DE OBRA</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col"></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" ></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" >% RENDIMIENTO</th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" ></th>
-                        <th style="padding: 0.5rem 1.5rem; text-align: end; background-color: #d5d5f5;" class="table-primary" scope="col" id="valor_total_manoobra">0</th>
-                    </tr>
-                </thead>
-                <!-- FOOTERS PRINCIPAL -->
                 <tfoot style="font-size: 14px; font-weight: bold;">
-                    <tr>
-                        <td class="table-dark" scope="col">TOTALES</td>
-                        <td class="table-dark" scope="col"></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" id="cantidad_total_apu"></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" ></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" ></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" id="costo_total_apu"></td>
-                        <td class="table-dark" scope="col" style="text-align: end;" id="valor_total_apu">0</td>
+                    <tr style="background-color: #c7e4c3;">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Subtotal</td>
+                        <td id="apuEquiposTotal" style="text-align: end;">0</td>
+                        <td></td>
                     </tr>
                 </tfoot>
             </table>
+        </div>
 
+        <div class="card-body" style="overflow: auto;">
+            <!-- TABLA DE MATERIALES -->
+            <table id="apuMateriales" class="table table-bordered display responsive" width="100%">
+                <thead>
+                    <tr style="background-color: #2d9bce; color: white;">
+                        <th style="border-radius: 15px 0px 0px 0px !important;">MATERIALES</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Desperdicio</th>
+                        <th>Cantidad Total</th>
+                        <th>Valor unitario</th>
+                        <th>Valor total</th>
+                        <th style="border-radius: 0px 15px 0px 0px !important;">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="items-materiales" style="font-size: 13px;" class="table-group-divider">
+                </tbody>
+
+                <tfoot style="font-size: 14px; font-weight: bold;">
+                    <tr style="background-color: #c3d8e4;">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Subtotal</td>
+                        <td id="apuMaterialesTotal" style="text-align: end;">0</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 
