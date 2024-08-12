@@ -148,7 +148,7 @@ apu_table.on('click', '.edit-apu', function() {
 
             if (producto.producto.tipo_producto == 2) {
                 id_manos++;
-                var prestaciones = 1.83;
+                var prestaciones = producto.prestaciones;
                 var data = {
                     'consecutivo': id_manos,
                     'id_producto': producto.producto.id,
@@ -157,7 +157,7 @@ apu_table.on('click', '.edit-apu', function() {
                     'cantidad': producto.cantidad,
                     'prestaciones': prestaciones,
                     'cantidad_total': producto.cantidad_total,
-                    'costo_unitario': parseFloat(producto.costo),
+                    'costo_unitario': parseFloat(producto.costo) * prestaciones,
                     'costo': parseFloat(producto.costo),
                     'porcentaje_desperdicio': producto.desperdicio,
                     'porcentaje_rendimiento': producto.rendimiento,

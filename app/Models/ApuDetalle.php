@@ -17,6 +17,7 @@ class ApuDetalle extends Model
         'costo',
         'desperdicio',
         'rendimiento',
+        'prestaciones',
         'total',
     ];
 
