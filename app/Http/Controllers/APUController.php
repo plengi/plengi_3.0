@@ -83,7 +83,9 @@ class APUController extends Controller
             'productos' => 'array|required',
             'productos.*.id_producto' => 'required|exists:productos,id',
             'productos.*.costo' => 'required|min:0',
+            'productos.*.costo_total' => 'required|min:0',
             'productos.*.porcentaje_desperdicio' => 'required|min:0',
+            'productos.*.porcentaje_rendimiento' => 'required|min:0',
             'productos.*.unidad_medida' => 'required',
         ];
 
@@ -100,7 +102,7 @@ class APUController extends Controller
         $apu = Apu::create([
             'nombre' => $request->get('nombre'),
             'unidad_medida' => $request->get('unidad_medida'),
-            'valor_total' => 0,
+            'valor_total' => $request->get('varlor_total'),
         ]);
 
         $totalAPU = 0;
@@ -109,20 +111,18 @@ class APUController extends Controller
         if ($productos) {
             foreach ($productos as $producto) {
                 $producto = (object)$producto;
-                $totalAPU+= $producto->costo * $producto->cantidad;
                 ApuDetalle::create([
                     'id_apu' => $apu->id,
                     'id_producto' => $producto->id_producto,
                     'cantidad' => $producto->cantidad,
+                    'cantidad_total' => $producto->cantidad_total,
                     'costo' => $producto->costo,
                     'desperdicio' => $producto->porcentaje_desperdicio,
-                    'total' => $producto->costo * $producto->cantidad,
+                    'rendimiento' => $producto->porcentaje_desperdicio,
+                    'total' => $producto->costo_total,
                 ]);
             }
         }
-        
-        $apu->valor_total = $totalAPU;
-        $apu->save();
 
         return response()->json([
             'success'=>	true,
@@ -140,7 +140,9 @@ class APUController extends Controller
             'productos' => 'array|required',
             'productos.*.id_producto' => 'required|exists:productos,id',
             'productos.*.costo' => 'required|min:0',
+            'productos.*.costo_total' => 'required|min:0',
             'productos.*.porcentaje_desperdicio' => 'required|min:0',
+            'productos.*.porcentaje_rendimiento' => 'required|min:0',
             'productos.*.unidad_medida' => 'required',
         ];
 
@@ -159,27 +161,25 @@ class APUController extends Controller
         $apu = Apu::find($request->get('id'));
         $apu->nombre = $request->get('nombre');
         $apu->unidad_medida = $request->get('unidad_medida');
+        $apu->valor_total = $request->get('varlor_total');
+        $apu->save();
 
-        $totalAPU = 0;
         $productos = $request->get('productos');
-
         if ($productos) {
             foreach ($productos as $producto) {
                 $producto = (object)$producto;
-                $totalAPU+= $producto->costo * $producto->cantidad;
                 ApuDetalle::create([
                     'id_apu' => $apu->id,
                     'id_producto' => $producto->id_producto,
                     'cantidad' => $producto->cantidad,
+                    'cantidad_total' => $producto->cantidad_total,
                     'costo' => $producto->costo,
                     'desperdicio' => $producto->porcentaje_desperdicio,
-                    'total' => $producto->costo * $producto->cantidad,
+                    'rendimiento' => $producto->porcentaje_desperdicio,
+                    'total' => $producto->costo_total,
                 ]);
             }
-        }
-
-        $apu->valor_total = $totalAPU;
-        $apu->save();
+        }        
 
         return response()->json([
             'success'=>	true,

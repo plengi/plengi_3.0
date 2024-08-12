@@ -13,8 +13,10 @@ class ApuDetalle extends Model
         'id_apu',
         'id_producto',
         'cantidad',
+        'cantidad_total',
         'costo',
         'desperdicio',
+        'rendimiento',
         'total',
     ];
 

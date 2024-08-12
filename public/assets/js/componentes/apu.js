@@ -24,6 +24,11 @@ let lenguajeDatatable = {
     }
 }
 
+var id_materiales = 0;
+var id_equipos = 0;
+var id_manos = 0;
+var totalGeneralApu = 0;
+
 let arrayProductos = {
     'materiales': [],
     'equipos': [],
@@ -80,138 +85,201 @@ $(document).on('click', '#createApu', function () {
     $("#create-apu-component").show();
 });
 
-// apu_table.on('click', '.edit-apu', function() {
-//     clearFormAPU();
+apu_table.on('click', '.edit-apu', function() {
+    clearFormAPU();
 
-//     var id = this.id.split('_')[1];
-//     var data = getDataById(id, apu_table);
+    var id = this.id.split('_')[1];
+    var data = getDataById(id, apu_table);
 
-//     console.log('data: ',data);
+    $("#crearApu").hide();
+    $("#actualizarApu").show();
+    $('#id_apu_up').val(data.id);
+    $('#nombre_apu').val(data.nombre);
 
-//     $('#id_apu_up').val(data.id);
-//     $('#nombre_apu').val(data.nombre);
+    $("#totalGeneralApu").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        data.valor_total
+    ));
 
-//     $("#crearApu").hide();
-//     $("#actualizarApu").show();
+    if (data.detalles.length) {
+        var productos = data.detalles
+        for (let index = 0; index < productos.length; index++) {
+            var producto = productos[index];
+            if (producto.producto.tipo_producto == 0) {
+                console.log(producto);
+                id_materiales++;
+                var data = {
+                    'consecutivo': id_materiales,
+                    'id_producto': parseInt(producto.id),
+                    'nombre_producto': producto.producto.nombre,
+                    'unidad_medida': producto.producto.unidad_medida,
+                    'cantidad': producto.cantidad,
+                    'cantidad_total': producto.cantidad_total,
+                    'costo_unitario': parseFloat(producto.costo),
+                    'costo': parseFloat(producto.costo),
+                    'porcentaje_desperdicio': producto.desperdicio,
+                    'porcentaje_rendimiento': producto.rendimiento,
+                    'costo_total': parseFloat(producto.total)
+                }
+                arrayProductos.materiales.push(data);
+                addItemToTable(data, 'materiales');
+            }
 
-//     if (data.detalles.length) {
-//         var productos = data.detalles
-//         for (let index = 0; index < productos.length; index++) {
-//             var producto = productos[index];
+            if (producto.producto.tipo_producto == 1) {
+                id_equipos++;
+                var data = {
+                    'consecutivo': id_equipos,
+                    'id_producto': parseInt(producto.id),
+                    'nombre_producto': producto.producto.nombre,
+                    'unidad_medida': producto.producto.unidad_medida,
+                    'cantidad': producto.cantidad,
+                    'cantidad_total': producto.cantidad_total,
+                    'costo_unitario': parseFloat(producto.costo),
+                    'costo': parseFloat(producto.costo),
+                    'porcentaje_desperdicio': producto.desperdicio,
+                    'porcentaje_rendimiento': producto.rendimiento,
+                    'costo_total': parseFloat(producto.total)
+                }
+                arrayProductos.equipos.push(data);
+                addItemToTable(data, 'equipos');
+            }
 
-//             if (producto.producto.tipo_producto == 0) {
-//                 id_materiales++;
-//                 var data = {
-//                     'consecutivo': id_materiales,
-//                     'id_producto': parseInt(producto.producto.id),
-//                     'nombre_producto': producto.producto.nombre,
-//                     'unidad_medida': producto.producto.unidad_medida,
-//                     'cantidad': producto.cantidad,
-//                     'unidad_medida': producto.producto.unidad_medida,
-//                     'costo': parseFloat(producto.costo),
-//                     'porcentaje_desperdicio': parseFloat(producto.desperdicio),
-//                     'costo_total': parseFloat(producto.total)
-//                 }
-//                 arrayProductos.materiales.push(data);
-//                 addItemToTable(data, 'materiales');
-//             }
+            if (producto.producto.tipo_producto == 2) {
+                id_manos++;
+                var data = {
+                    'consecutivo': id_manos,
+                    'id_producto': parseInt(producto.id),
+                    'nombre_producto': producto.producto.nombre,
+                    'unidad_medida': producto.producto.unidad_medida,
+                    'cantidad': producto.cantidad,
+                    'cantidad_total': producto.cantidad_total,
+                    'costo_unitario': parseFloat(producto.costo),
+                    'costo': parseFloat(producto.costo),
+                    'porcentaje_desperdicio': producto.desperdicio,
+                    'porcentaje_rendimiento': producto.rendimiento,
+                    'costo_total': parseFloat(producto.total)
+                }
+                arrayProductos.mano_obra.push(data);
+                addItemToTable(data, 'mano_obra');
+            }
+        }
+        calcularTotalesProductos();
+    }
+    
 
-//             if (producto.producto.tipo_producto == 1) {
-//                 id_equipos++;
-//                 var data = {
-//                     'consecutivo': id_equipos,
-//                     'id_producto': parseInt(producto.producto.id),
-//                     'nombre_producto': producto.producto.nombre,
-//                     'unidad_medida': producto.producto.unidad_medida,
-//                     'cantidad': producto.cantidad,
-//                     'unidad_medida': producto.producto.unidad_medida,
-//                     'costo': parseFloat(producto.costo),
-//                     'porcentaje_desperdicio': parseFloat(producto.desperdicio),
-//                     'costo_total': parseFloat(producto.total)
-//                 }
-//                 arrayProductos.equipos.push(data);
-//                 addItemToTable(data, 'equipos');
-//             }
+    // if (data.detalles.length) {
+    //     var productos = data.detalles
+    //     for (let index = 0; index < productos.length; index++) {
+    //         var producto = productos[index];
 
-//             if (producto.producto.tipo_producto == 2) {
-//                 id_manos++;
-//                 var data = {
-//                     'consecutivo': id_manos,
-//                     'id_producto': parseInt(producto.producto.id),
-//                     'nombre_producto': producto.producto.nombre,
-//                     'unidad_medida': producto.producto.unidad_medida,
-//                     'cantidad': producto.cantidad,
-//                     'unidad_medida': producto.producto.unidad_medida,
-//                     'costo': parseFloat(producto.costo),
-//                     'porcentaje_desperdicio': parseFloat(producto.desperdicio),
-//                     'costo_total': parseFloat(producto.total)
-//                 }
-//                 arrayProductos.mano_obra.push();
-//                 addItemToTable(data, 'mano_obra');
-//             }
-//         }
+    //         if (producto.producto.tipo_producto == 0) {
+    //             id_materiales++;
+    //             var data = {
+    //                 'consecutivo': id_materiales,
+    //                 'id_producto': parseInt(producto.producto.id),
+    //                 'nombre_producto': producto.producto.nombre,
+    //                 'unidad_medida': producto.producto.unidad_medida,
+    //                 'cantidad': producto.cantidad,
+    //                 'unidad_medida': producto.producto.unidad_medida,
+    //                 'costo': parseFloat(producto.costo),
+    //                 'porcentaje_desperdicio': parseFloat(producto.desperdicio),
+    //                 'costo_total': parseFloat(producto.total)
+    //             }
+    //             arrayProductos.materiales.push(data);
+    //             addItemToTable(data, 'materiales');
+    //         }
 
-//         $('#id_producto').val('').trigger('change');
-//         calcularTotalesProductos();
-//     }
+    //         if (producto.producto.tipo_producto == 1) {
+    //             id_equipos++;
+    //             var data = {
+    //                 'consecutivo': id_equipos,
+    //                 'id_producto': parseInt(producto.producto.id),
+    //                 'nombre_producto': producto.producto.nombre,
+    //                 'unidad_medida': producto.producto.unidad_medida,
+    //                 'cantidad': producto.cantidad,
+    //                 'unidad_medida': producto.producto.unidad_medida,
+    //                 'costo': parseFloat(producto.costo),
+    //                 'porcentaje_desperdicio': parseFloat(producto.desperdicio),
+    //                 'costo_total': parseFloat(producto.total)
+    //             }
+    //             arrayProductos.equipos.push(data);
+    //             addItemToTable(data, 'equipos');
+    //         }
 
-//     $("#actions-apu-component").hide();
-//     $("#table-apu-component").hide();
-//     $("#actions-apu-create").show();
-//     $("#create-apu-component").show();
-// });
+    //         if (producto.producto.tipo_producto == 2) {
+    //             id_manos++;
+    //             var data = {
+    //                 'consecutivo': id_manos,
+    //                 'id_producto': parseInt(producto.producto.id),
+    //                 'nombre_producto': producto.producto.nombre,
+    //                 'unidad_medida': producto.producto.unidad_medida,
+    //                 'cantidad': producto.cantidad,
+    //                 'unidad_medida': producto.producto.unidad_medida,
+    //                 'costo': parseFloat(producto.costo),
+    //                 'porcentaje_desperdicio': parseFloat(producto.desperdicio),
+    //                 'costo_total': parseFloat(producto.total)
+    //             }
+    //             arrayProductos.mano_obra.push();
+    //             addItemToTable(data, 'mano_obra');
+    //         }
+    //     }
 
-// apu_table.on('click', '.drop-apu', function() {
-//     var trApu = $(this).closest('tr');
-//     var id = this.id.split('_')[1];
-//     var data = getDataById(id, apu_table);
+    //     $('#id_producto').val('').trigger('change');
+    //     calcularTotalesProductos();
+    // }
 
-//     Swal.fire({
-//         title: 'Eliminar APU: '+data.nombre+'?',
-//         text: "No se podrá revertir!",
-//         type: 'warning',
-//         icon: 'warning',
-//         showCancelButton: true,
-//         confirmButtonColor: '#3085d6',
-//         cancelButtonColor: '#d33',
-//         confirmButtonText: 'Borrar!',
-//         reverseButtons: true,
-//     }).then((result) => {
-//         if (result.value){
-//             $.ajax({
-//                 url: 'apu-delete',
-//                 method: 'DELETE',
-//                 data: JSON.stringify({id: id}),
-//                 headers: {
-//                     "Content-Type": "application/json",
-//                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 },
-//                 dataType: 'json',
-//             }).done((res) => {
-//                 apu_table.row(trApu).remove().draw();
-//                 Swal.fire({
-//                     title: "Apu eliminado!",
-//                     text: "El material "+data.nombre+" fue eliminado con exito!",
-//                     icon: "success",
-//                     timer: 1500
-//                 })
-//             }).fail((res) => {
-//                 Swal.fire({
-//                     title: "Error!",
-//                     text: "El apu "+data.nombre+" no pudo ser eliminado!",
-//                     icon: "error",
-//                     timer: 1500
-//                 });
-//             });
-//         }
-//     });
-// });
+    $("#actions-apu-component").hide();
+    $("#table-apu-component").hide();
+    $("#actions-apu-create").show();
+    $("#create-apu-component").show();
+});
+
+apu_table.on('click', '.drop-apu', function() {
+    var trApu = $(this).closest('tr');
+    var id = this.id.split('_')[1];
+    var data = getDataById(id, apu_table);
+
+    Swal.fire({
+        title: 'Eliminar APU: '+data.nombre+'?',
+        text: "No se podrá revertir!",
+        type: 'warning',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Borrar!',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.value){
+            $.ajax({
+                url: 'apu-delete',
+                method: 'DELETE',
+                data: JSON.stringify({id: id}),
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+            }).done((res) => {
+                apu_table.row(trApu).remove().draw();
+                Swal.fire({
+                    title: "Apu eliminado!",
+                    text: "El material "+data.nombre+" fue eliminado con exito!",
+                    icon: "success",
+                    timer: 1500
+                })
+            }).fail((res) => {
+                Swal.fire({
+                    title: "Error!",
+                    text: "El apu "+data.nombre+" no pudo ser eliminado!",
+                    icon: "error",
+                    timer: 1500
+                });
+            });
+        }
+    });
+});
 
 apu_table.ajax.reload();
-
-var id_materiales = 0;
-var id_equipos = 0;
-var id_manos = 0;
 
 $(document).on('click', '#volverApu', function () {
     volverAPU();
@@ -226,153 +294,153 @@ function volverAPU () {
     apu_table.ajax.reload();
 }
 
-// $(document).on('click', '#crearApu', function () {
-//     var form = document.querySelector('#apuForm');
+$(document).on('click', '#crearApu', function () {
+    var form = document.querySelector('#apuForm');
 
-//     if(!form.checkValidity()){
-//         form.classList.add('was-validated');
-//         return;
-//     }
+    if(!form.checkValidity()){
+        form.classList.add('was-validated');
+        return;
+    }
 
-//     $("#volverApu").hide();
-//     $("#crearApu").hide();
-//     $("#crearApuLoading").show();
+    $("#volverApu").hide();
+    $("#crearApu").hide();
+    $("#crearApuLoading").show();
 
-//     let data = {
-//         nombre: $("#nombre_apu").val(),
-//         unidad_medida: $("#unidad_medida").val(),
-//         productos: getProductos()
-//     }
+    let data = {
+        nombre: $("#nombre_apu").val(),
+        unidad_medida: $("#unidad_medida").val(),
+        varlor_total: totalGeneralApu,
+        productos: getProductos(),
+    }
 
-//     $.ajax({
-//         url: 'apu',
-//         method: 'POST',
-//         data: JSON.stringify(data),
-//         headers: {
-//             "Content-Type": "application/json",
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         },
-//     }).done((res) => {
-//         if(res.success){
-//             clearFormAPU();
-//             $("#volverApu").show();
-//             $("#crearApu").show();
-//             $("#crearApuLoading").hide();
-//             volverAPU();
-//             Swal.fire({
-//                 title: "APU creado!",
-//                 text: "El APU fue creado con exito!",
-//                 icon: "success",
-//                 timer: 1500
-//             });
-//         }
-//     }).fail((err) => {
-//         $("#volverApu").show();
-//         $("#crearApu").show();
-//         $("#crearApuLoading").hide();
-//         Swal.fire({
-//             title: "Error!",
-//             text: "Error al crear nuevo APU!",
-//             icon: "error",
-//             timer: 1500
-//         });
-//     });
-    
-// });
+    $.ajax({
+        url: 'apu',
+        method: 'POST',
+        data: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    }).done((res) => {
+        if(res.success){
+            clearFormAPU();
+            $("#volverApu").show();
+            $("#crearApu").show();
+            $("#crearApuLoading").hide();
+            volverAPU();
+            Swal.fire({
+                title: "APU creado!",
+                text: "El APU fue creado con exito!",
+                icon: "success",
+                timer: 1500
+            });
+        }
+    }).fail((err) => {
+        $("#volverApu").show();
+        $("#crearApu").show();
+        $("#crearApuLoading").hide();
+        Swal.fire({
+            title: "Error!",
+            text: "Error al crear nuevo APU!",
+            icon: "error",
+            timer: 1500
+        });
+    });
+});
 
-// $(document).on('click', '#actualizarApu', function () {
-//     console.log('actualizarApu');
-//     var form = document.querySelector('#apuForm');
+$(document).on('click', '#actualizarApu', function () {
+    var form = document.querySelector('#apuForm');
 
-//     if(!form.checkValidity()){
-//         form.classList.add('was-validated');
-//         return;
-//     }
+    if(!form.checkValidity()){
+        form.classList.add('was-validated');
+        return;
+    }
 
-//     $("#volverApu").hide();
-//     $("#actualizarApu").hide();
-//     $("#crearApuLoading").show();
+    $("#volverApu").hide();
+    $("#actualizarApu").hide();
+    $("#crearApuLoading").show();
 
-//     let data = {
-//         id: $("#id_apu_up").val(),
-//         nombre: $("#nombre_apu").val(),
-//         unidad_medida: $("#unidad_medida").val(),
-//         productos: getProductos()
-//     }
+    let data = {
+        id: $("#id_apu_up").val(),
+        nombre: $("#nombre_apu").val(),
+        unidad_medida: $("#unidad_medida").val(),
+        varlor_total: totalGeneralApu,
+        productos: getProductos()
+    }
+    console.log(data);
+    $.ajax({
+        url: 'apu',
+        method: 'PUT',
+        data: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    }).done((res) => {
+        if(res.success){
+            clearFormAPU();
+            $("#volverApu").show();
+            $("#crearApu").show();
+            $("#crearApuLoading").hide();
+            volverAPU();
+            Swal.fire({
+                title: "APU actualizado!",
+                text: "El APU fue actualizado con exito!",
+                icon: "success",
+                timer: 1500
+            });
+        }
+    }).fail((err) => {
+        $("#volverApu").show();
+        $("#crearApu").show();
+        $("#crearApuLoading").hide();
+        Swal.fire({
+            title: "Error!",
+            text: "Error al actualizar APU!",
+            icon: "error",
+            timer: 1500
+        });
+    });
+});
 
-//     $.ajax({
-//         url: 'apu',
-//         method: 'PUT',
-//         data: JSON.stringify(data),
-//         headers: {
-//             "Content-Type": "application/json",
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         },
-//     }).done((res) => {
-//         if(res.success){
-//             clearFormAPU();
-//             $("#volverApu").show();
-//             $("#crearApu").show();
-//             $("#crearApuLoading").hide();
-//             volverAPU();
-//             Swal.fire({
-//                 title: "APU actualizado!",
-//                 text: "El APU fue actualizado con exito!",
-//                 icon: "success",
-//                 timer: 1500
-//             });
-//         }
-//     }).fail((err) => {
-//         $("#volverApu").show();
-//         $("#crearApu").show();
-//         $("#crearApuLoading").hide();
-//         Swal.fire({
-//             title: "Error!",
-//             text: "Error al actualizar APU!",
-//             icon: "error",
-//             timer: 1500
-//         });
-//     });
-// });
+//OBTENER DATOS DE LA TABLA
+function getDataById(idData, tabla) {
+    var data = tabla.rows().data();
+    for (let index = 0; index < data.length; index++) {
+        var element = data[index];
+        if(element.id == idData){
+            return element;
+        }
+    }
+    return false;
+}
 
-// //OBTENER DATOS DE LA TABLA
-// function getDataById(idData, tabla) {
-//     var data = tabla.rows().data();
-//     for (let index = 0; index < data.length; index++) {
-//         var element = data[index];
-//         if(element.id == idData){
-//             return element;
-//         }
-//     }
-//     return false;
-// }
+function getProductos () {
+    var productos = [];
 
-// function getProductos () {
-//     var productos = [];
+    if (arrayProductos['materiales'].length) {
+        for (let index = 0; index < arrayProductos['materiales'].length; index++) {
+            var element = arrayProductos['materiales'][index];
+            productos.push(element);
+        }
+    }
 
-//     if (arrayProductos['materiales'].length) {
-//         for (let index = 0; index < arrayProductos['materiales'].length; index++) {
-//             var element = arrayProductos['materiales'][index];
-//             productos.push(element);
-//         }
-//     }
+    if (arrayProductos['equipos'].length) {
+        for (let index = 0; index < arrayProductos['equipos'].length; index++) {
+            var element = arrayProductos['equipos'][index];
+            productos.push(element);
+        }
+    }
 
-//     if (arrayProductos['equipos'].length) {
-//         for (let index = 0; index < arrayProductos['equipos'].length; index++) {
-//             var element = arrayProductos['equipos'][index];
-//             productos.push(element);
-//         }
-//     }
+    if (arrayProductos['mano_obra'].length) {
+        for (let index = 0; index < arrayProductos['mano_obra'].length; index++) {
+            var element = arrayProductos['mano_obra'][index];
+            productos.push(element);
+        }
+    }
 
-//     if (arrayProductos['mano_obra'].length) {
-//         for (let index = 0; index < arrayProductos['mano_obra'].length; index++) {
-//             var element = arrayProductos['mano_obra'][index];
-//             productos.push(element);
-//         }
-//     }
-
-//     return productos;
-// }
+    return productos;
+}
 
 function calcularProducto (tipo, consecutivo) {
     console.log('tipo: ',tipo);
@@ -396,8 +464,6 @@ function calcularProducto (tipo, consecutivo) {
         arrayProductos[tipo][index].cantidad = cantidad;
         arrayProductos[tipo][index].porcentaje_rendimiento = rendimiento;
         arrayProductos[tipo][index].costo_total = totalEquipo;
-
-        calcularTotalEquipos();
     }
 
     if (tipo == 'materiales') {
@@ -417,31 +483,54 @@ function calcularProducto (tipo, consecutivo) {
         arrayProductos[tipo][index].porcentaje_desperdicio = desperdicio;
         arrayProductos[tipo][index].cantidad_total = cantidadTotal;
         arrayProductos[tipo][index].costo_total = totalMaterial;
-
-        calcularTotalMateriales();
     }
 
-    // calcularTotalesProductos();
+    if (tipo == 'mano_obra') {
+        var rendimiento = $("#desperdicio_"+tipo+"_"+consecutivo).val();
+        var totalEquipo = (cantidad * data.costo) / rendimiento;
+
+        $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+            totalEquipo
+        ));
+
+        arrayProductos[tipo][index].cantidad = cantidad;
+        arrayProductos[tipo][index].porcentaje_rendimiento = rendimiento;
+        arrayProductos[tipo][index].costo_total = totalEquipo;
+    }
+
+    calcularTotalesProductos();
 }
 
-function calcularTotalEquipos () {
+function calcularTotalesProductos () {
     var subtotalEquipos = 0;
     arrayProductos['equipos'].forEach(equipo => {
         subtotalEquipos+= equipo.costo_total;
     });
     $("#apuEquiposTotal").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         subtotalEquipos
-    ))
-}
+    ));
 
-function calcularTotalMateriales () {
     var subtotalMateriales = 0;
     arrayProductos['materiales'].forEach(equipo => {
         subtotalMateriales+= equipo.costo_total;
     });
     $("#apuMaterialesTotal").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         subtotalMateriales
-    ))
+    ));
+
+    var subtotalManoObra = 0;
+    arrayProductos['mano_obra'].forEach(equipo => {
+        subtotalManoObra+= equipo.costo_total;
+    });
+    $("#apuManoObraTotal").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        subtotalManoObra
+    ));
+
+    totalGeneralApu = subtotalEquipos + subtotalMateriales + subtotalManoObra;
+    $("#totalGeneralApu").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        totalGeneralApu
+    ));
+    
 }
 
 function encontrarIndex (array, id) {
@@ -458,7 +547,7 @@ function encontrarIndex (array, id) {
 }
 
 function addItemToTable (data, tipo) {
-    
+    console.log(data);
     if (tipo == 'equipos') {
         var html = `
             <td>${data.nombre_producto}</td>
@@ -473,7 +562,7 @@ function addItemToTable (data, tipo) {
                 <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
             </td>
             <td id="total_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
-                data.costo,
+                data.costo_total,
               )}</td>
             <td style="text-align: -webkit-center;">
                 <span class="btn badge bg-gradient-danger drop-row-grid" onclick="deleteProductos('${tipo}', ${data.consecutivo})" style="margin-bottom: 0;">
@@ -500,8 +589,32 @@ function addItemToTable (data, tipo) {
                 data.costo,
             )}</td>
             <td id="total_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+                data.costo_total,
+            )}</td>
+            <td style="text-align: -webkit-center;">
+                <span class="btn badge bg-gradient-danger drop-row-grid" onclick="deleteProductos('${tipo}', ${data.consecutivo})" style="margin-bottom: 0;">
+                    <i class="fa fa-trash"></i>
+                </span>
+            </td>
+        `;
+    }
+
+    if (tipo == 'mano_obra') {
+        var html = `
+            <td>${data.nombre_producto}</td>
+            <td style="padding: 3px 0px;">
+                <input type="number" style="text-align: end;" class="form-control form-control-sm" id="cantidad_${tipo}_${data.consecutivo}" value="${data.cantidad}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            </td>
+            <td>${data.unidad_medida.toUpperCase()}</td>
+            <td id="costo_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
                 data.costo,
             )}</td>
+            <td style="padding: 3px 0px;">
+                <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            </td>
+            <td id="total_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+                data.costo_total,
+              )}</td>
             <td style="text-align: -webkit-center;">
                 <span class="btn badge bg-gradient-danger drop-row-grid" onclick="deleteProductos('${tipo}', ${data.consecutivo})" style="margin-bottom: 0;">
                     <i class="fa fa-trash"></i>
@@ -517,8 +630,7 @@ function addItemToTable (data, tipo) {
     ].join('');
     document.getElementById('items-'+tipo).insertBefore(item, null);
 
-    if (tipo == 'equipos') calcularTotalEquipos();
-    if (tipo == 'materiales') calcularTotalMateriales();
+    calcularTotalesProductos();
 }
 
 function deleteProductos (tipo, consecutivo) {
@@ -526,10 +638,32 @@ function deleteProductos (tipo, consecutivo) {
     arrayProductos[tipo].splice(index,1);
     document.getElementById("tr_"+tipo+"_"+consecutivo).remove();
     
-    if (tipo == 'equipos') calcularTotalEquipos();
-    if (tipo == 'materiales') calcularTotalMateriales();
+    calcularTotalesProductos();
+}
+
+function clearFormAPU () {
+    $('#items-materiales').empty();
+    $('#items-equipos').empty();
+    $('#items-mano_obra').empty();
+
+    $("#crearApu").show();
+    $("#actualizarApu").hide();
+    $("#crearApuLoading").hide();
     
-    // calcularTotalesProductos();
+    $('#id_apu_up').val("");
+    $('#nombre_apu').val("");
+
+    arrayProductos = {
+        'materiales': [],
+        'equipos': [],
+        'mano_obra': []
+    }
+    
+    id_materiales = 0;
+    id_equipos = 0;
+    id_manos = 0;
+
+    calcularTotalesProductos();
 }
 
 $(function () {
@@ -574,26 +708,6 @@ $(function () {
             dataProducto = dataProducto[0];
             console.log('dataProducto: ',dataProducto);
 
-            if (dataProducto.tipo_producto == 1) {
-                id_equipos++;
-                var data = {
-                    'consecutivo': id_equipos,
-                    'id_producto': parseInt(dataProducto.id),
-                    'nombre_producto': dataProducto.nombre,
-                    'unidad_medida': dataProducto.unidad_medida,
-                    'cantidad': 1,
-                    'cantidad_total': 1,
-                    'costo_unitario': parseFloat(dataProducto.valor),
-                    'costo': parseFloat(dataProducto.valor),
-                    'porcentaje_desperdicio': 0,
-                    'porcentaje_rendimiento': 1,
-                    'costo_total': parseFloat(dataProducto.valor)
-                }
-                arrayProductos.equipos.push(data);
-                addItemToTable(data, 'equipos');
-                calcularTotalEquipos();
-            }
-
             if (dataProducto.tipo_producto == 0) {
                 id_materiales++;
                 var data = {
@@ -611,10 +725,47 @@ $(function () {
                 }
                 arrayProductos.materiales.push(data);
                 addItemToTable(data, 'materiales');
-                calcularTotalMateriales();
             }
 
-            // calcularTotalesProductos();
+            if (dataProducto.tipo_producto == 1) {
+                id_equipos++;
+                var data = {
+                    'consecutivo': id_equipos,
+                    'id_producto': parseInt(dataProducto.id),
+                    'nombre_producto': dataProducto.nombre,
+                    'unidad_medida': dataProducto.unidad_medida,
+                    'cantidad': 1,
+                    'cantidad_total': 1,
+                    'costo_unitario': parseFloat(dataProducto.valor),
+                    'costo': parseFloat(dataProducto.valor),
+                    'porcentaje_desperdicio': 0,
+                    'porcentaje_rendimiento': 1,
+                    'costo_total': parseFloat(dataProducto.valor)
+                }
+                arrayProductos.equipos.push(data);
+                addItemToTable(data, 'equipos');
+            }
+
+            if (dataProducto.tipo_producto == 2) {
+                id_manos++;
+                var data = {
+                    'consecutivo': id_manos,
+                    'id_producto': parseInt(dataProducto.id),
+                    'nombre_producto': dataProducto.nombre,
+                    'unidad_medida': dataProducto.unidad_medida,
+                    'cantidad': 1,
+                    'cantidad_total': 1,
+                    'costo_unitario': parseFloat(dataProducto.valor),
+                    'costo': parseFloat(dataProducto.valor),
+                    'porcentaje_desperdicio': 0,
+                    'porcentaje_rendimiento': 1,
+                    'costo_total': parseFloat(dataProducto.valor)
+                }
+                arrayProductos.mano_obra.push(data);
+                addItemToTable(data, 'mano_obra');
+            }
+
+            calcularTotalesProductos();
         }
     });
 

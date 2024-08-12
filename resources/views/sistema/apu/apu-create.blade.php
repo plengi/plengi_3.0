@@ -50,12 +50,17 @@
                     </div>
                 </div>
             </form>
+
+            <div style="place-content: center; display: flex; color: black; font-weight: bold;">
+                TOTAL APU:&nbsp;
+                <div id="totalGeneralApu">0</div>
+            </div>
     
         </div>
     </div>
 
     <div class="card mb-4">
-        <div class="card-body" style="overflow: auto;">
+        <div class="card-body" style="overflow: auto; padding: 0.5rem;">
             <!-- TABLA DE EQUIPOS -->
             <table id="apuEquipos" class="table table-bordered display responsive" width="100%">
                 <thead>
@@ -87,7 +92,7 @@
             </table>
         </div>
 
-        <div class="card-body" style="overflow: auto;">
+        <div class="card-body" style="overflow: auto; padding: 0.5rem;">
             <!-- TABLA DE MATERIALES -->
             <table id="apuMateriales" class="table table-bordered display responsive" width="100%">
                 <thead>
@@ -120,6 +125,39 @@
                 </tfoot>
             </table>
         </div>
+
+        <div class="card-body" style="overflow: auto; padding: 0.5rem;">
+            <!-- TABLA DE MANO OBRA -->
+            <table id="apuManoObra" class="table table-bordered display responsive" width="100%">
+                <thead>
+                    <tr style="background-color: #4d2dce; color: white;">
+                        <th style="border-radius: 15px 0px 0px 0px !important;">MANO OBRA</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Tarifa</th>
+                        <th>Rendimiento</th>
+                        <th>Valor total</th>
+                        <th style="border-radius: 0px 15px 0px 0px !important;">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="items-mano_obra" style="font-size: 13px;" class="table-group-divider">
+                </tbody>
+
+                <tfoot style="font-size: 14px; font-weight: bold;">
+                    <tr style="background-color: #d5c3e4;">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Subtotal</td>
+                        <td id="apuManoObraTotal" style="text-align: end;">0</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
     </div>
 
 </div>

@@ -70,7 +70,7 @@
                     </button>
                     <button id="crearApuLoading" class="btn btn-success btn-sm ms-auto" style="display:none;" disabled>
                         Creando
-                        <i class="fas fa-spinner fa-spin"></i>
+                        <i class="fa fa-spinner fa-pulse"></i>
                     </button>
                 </div>
             </div>
