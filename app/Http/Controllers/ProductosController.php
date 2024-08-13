@@ -26,6 +26,11 @@ class ProductosController extends Controller
         return view('sistema.mano-obras.mano-obras-view');
     }
 
+    public function indexTransportes (Request $request)
+    {
+        return view('sistema.transportes.transportes-view');
+    }
+
     public function read (Request $request)
     {
         try {

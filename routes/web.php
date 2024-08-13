@@ -67,6 +67,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/mano-obras-update', 'update')->name('mano-obras-update');
 		Route::delete('/mano-obras-delete', 'delete')->name('mano-obras-delete');
 
+        //TRANSPORTES
+        Route::get('/transportes', 'indexTransportes')->name('transportes');
+        Route::get('/transportes-read', 'read')->name('transportes-read');
+        Route::post('/transportes-create', 'create')->name('transportes-create');
+        Route::put('/transportes-update', 'update')->name('transportes-update');
+		Route::delete('/transportes-delete', 'delete')->name('transportes-delete');
+
 		Route::get('/productos-combo', 'combo');
 
 	});
