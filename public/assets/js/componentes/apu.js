@@ -713,6 +713,8 @@ $(function () {
             }
 
             calcularTotalesProductos();
+            $('#id_producto').val('');
+            $('#id_producto').change();
         }
     });
 
