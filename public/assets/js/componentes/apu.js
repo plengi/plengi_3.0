@@ -27,12 +27,14 @@ let lenguajeDatatable = {
 var id_materiales = 0;
 var id_equipos = 0;
 var id_manos = 0;
+var id_transportes = 0;
 var totalGeneralApu = 0;
 
 let arrayProductos = {
     'materiales': [],
     'equipos': [],
-    'mano_obra': []
+    'mano_obra': [],
+    'transportes': []
 };
 
 //TABLA APU
@@ -120,6 +122,7 @@ apu_table.on('click', '.edit-apu', function() {
                     'costo': parseFloat(producto.costo),
                     'porcentaje_desperdicio': producto.desperdicio,
                     'porcentaje_rendimiento': producto.rendimiento,
+                    'distancia': producto.distancia,
                     'costo_total': parseFloat(producto.total)
                 }
                 arrayProductos.materiales.push(data);
@@ -140,6 +143,7 @@ apu_table.on('click', '.edit-apu', function() {
                     'costo': parseFloat(producto.costo),
                     'porcentaje_desperdicio': producto.desperdicio,
                     'porcentaje_rendimiento': producto.rendimiento,
+                    'distancia': producto.distancia,
                     'costo_total': parseFloat(producto.total)
                 }
                 arrayProductos.equipos.push(data);
@@ -161,10 +165,32 @@ apu_table.on('click', '.edit-apu', function() {
                     'costo': parseFloat(producto.costo),
                     'porcentaje_desperdicio': producto.desperdicio,
                     'porcentaje_rendimiento': producto.rendimiento,
+                    'distancia': producto.distancia,
                     'costo_total': parseFloat(producto.total)
                 }
                 arrayProductos.mano_obra.push(data);
                 addItemToTable(data, 'mano_obra');
+            }
+
+            if (producto.producto.tipo_producto == 3) {
+                id_transportes++;
+                var data = {
+                    'consecutivo': id_transportes,
+                    'id_producto': producto.producto.id,
+                    'nombre_producto': producto.producto.nombre,
+                    'unidad_medida': producto.producto.unidad_medida,
+                    'cantidad': producto.cantidad,
+                    'prestaciones': 0,
+                    'cantidad_total': producto.cantidad_total,
+                    'costo_unitario': parseFloat(producto.costo),
+                    'costo': parseFloat(producto.costo),
+                    'porcentaje_desperdicio': producto.desperdicio,
+                    'porcentaje_rendimiento': producto.rendimiento,
+                    'distancia': producto.distancia,
+                    'costo_total': parseFloat(producto.total)
+                }
+                arrayProductos.transportes.push(data);
+                addItemToTable(data, 'transportes');
             }
         }
         calcularTotalesProductos();
@@ -310,7 +336,7 @@ $(document).on('click', '#actualizarApu', function () {
         varlor_total: totalGeneralApu,
         productos: getProductos()
     }
-    
+
     $.ajax({
         url: 'apu',
         method: 'PUT',
@@ -382,14 +408,21 @@ function getProductos () {
         }
     }
 
+    if (arrayProductos['transportes'].length) {
+        for (let index = 0; index < arrayProductos['transportes'].length; index++) {
+            var element = arrayProductos['transportes'][index];
+            productos.push(element);
+        }
+    }
+
     return productos;
 }
 
 function calcularProducto (tipo, consecutivo) {
-    
+
     var index = encontrarIndex(arrayProductos[tipo], consecutivo);
     var data = arrayProductos[tipo][index];
-    
+
     var cantidad = parseInt($("#cantidad_"+tipo+"_"+consecutivo).val());
 
     if (tipo == 'equipos') {
@@ -437,6 +470,19 @@ function calcularProducto (tipo, consecutivo) {
         arrayProductos[tipo][index].costo_total = totalEquipo;
     }
 
+    if (tipo == 'transportes') {
+        var distancia = $("#distancia_"+tipo+"_"+consecutivo).val();
+        var totalTransporte = cantidad * data.costo * distancia;
+
+        $("#total_"+tipo+"_"+consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+            totalTransporte
+        ));
+
+        arrayProductos[tipo][index].cantidad = cantidad;
+        arrayProductos[tipo][index].distancia = distancia;
+        arrayProductos[tipo][index].costo_total = totalTransporte;
+    }
+
     calcularTotalesProductos();
 }
 
@@ -465,11 +511,19 @@ function calcularTotalesProductos () {
         subtotalManoObra
     ));
 
-    totalGeneralApu = subtotalEquipos + subtotalMateriales + subtotalManoObra;
+    var subtotalTransportes = 0;
+    arrayProductos['transportes'].forEach(transporte => {
+        subtotalTransportes+= transporte.costo_total;
+    });
+    $("#apuTransportesTotal").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        subtotalTransportes
+    ));
+
+    totalGeneralApu = subtotalEquipos + subtotalMateriales + subtotalManoObra + subtotalTransportes;
     $("#totalGeneralApu").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         totalGeneralApu
     ));
-    
+
 }
 
 function encontrarIndex (array, id) {
@@ -566,6 +620,30 @@ function addItemToTable (data, tipo) {
         `;
     }
 
+    if (tipo == 'transportes') {
+        var html = `
+            <td>${data.nombre_producto}</td>
+            <td style="padding: 3px 0px;">
+                <input type="number" style="text-align: end;" class="form-control form-control-sm" id="cantidad_${tipo}_${data.consecutivo}" value="${data.cantidad}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            </td>
+            <td>${data.unidad_medida.toUpperCase()}</td>
+            <td id="costo_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+                data.costo,
+            )}</td>
+            <td style="padding: 3px 0px;">
+                <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.distancia}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            </td>
+            <td id="total_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
+                data.costo_total,
+              )}</td>
+            <td style="text-align: -webkit-center;">
+                <span class="btn badge bg-gradient-danger drop-row-grid" onclick="deleteProductos('${tipo}', ${data.consecutivo})" style="margin-bottom: 0;">
+                    <i class="fa fa-trash"></i>
+                </span>
+            </td>
+        `;
+    }
+
     var item = document.createElement('tr');
     item.setAttribute("id", "tr_"+tipo+"_"+data.consecutivo);
     item.innerHTML = [
@@ -580,7 +658,7 @@ function deleteProductos (tipo, consecutivo) {
     var index = encontrarIndex(arrayProductos[tipo], consecutivo);
     arrayProductos[tipo].splice(index,1);
     document.getElementById("tr_"+tipo+"_"+consecutivo).remove();
-    
+
     calcularTotalesProductos();
 }
 
@@ -588,23 +666,26 @@ function clearFormAPU () {
     $('#items-materiales').empty();
     $('#items-equipos').empty();
     $('#items-mano_obra').empty();
+    $('#items-transportes').empty();
 
     $("#crearApu").show();
     $("#actualizarApu").hide();
     $("#crearApuLoading").hide();
-    
+
     $('#id_apu_up').val("");
     $('#nombre_apu').val("");
 
     arrayProductos = {
         'materiales': [],
         'equipos': [],
-        'mano_obra': []
+        'mano_obra': [],
+        'transportes': []
     }
-    
+
     id_materiales = 0;
     id_equipos = 0;
     id_manos = 0;
+    id_transportes = 0;
 
     calcularTotalesProductos();
 }
@@ -617,7 +698,7 @@ $(function () {
         placeholder: "Seleccione un recurso",
         language: {
             noResults: function() {
-                return "No hay resultado";        
+                return "No hay resultado";
             },
             searching: function() {
                 return "Buscando..";
@@ -662,8 +743,9 @@ $(function () {
                     'cantidad_total': 1,
                     'costo_unitario': parseFloat(dataProducto.valor),
                     'costo': parseFloat(dataProducto.valor),
-                    'porcentaje_desperdicio': 0,
+                    'porcentaje_desperdicio': 5,
                     'porcentaje_rendimiento': 0,
+                    'distancia': 0,
                     'costo_total': parseFloat(dataProducto.valor)
                 }
                 arrayProductos.materiales.push(data);
@@ -684,6 +766,7 @@ $(function () {
                     'costo': parseFloat(dataProducto.valor),
                     'porcentaje_desperdicio': 0,
                     'porcentaje_rendimiento': 1,
+                    'distancia': 0,
                     'costo_total': parseFloat(dataProducto.valor)
 
                 }
@@ -706,10 +789,33 @@ $(function () {
                     'costo': parseFloat(dataProducto.valor),
                     'porcentaje_desperdicio': 0,
                     'porcentaje_rendimiento': 1,
+                    'distancia': 0,
                     'costo_total': prestaciones * parseFloat(dataProducto.valor)
                 }
                 arrayProductos.mano_obra.push(data);
                 addItemToTable(data, 'mano_obra');
+            }
+
+            if (dataProducto.tipo_producto == 3) {
+                id_transportes++;
+                var data = {
+                    'consecutivo': id_transportes,
+                    'id_producto': parseInt(dataProducto.id),
+                    'nombre_producto': dataProducto.nombre,
+                    'unidad_medida': dataProducto.unidad_medida,
+                    'cantidad': 1,
+                    'prestaciones': 0,
+                    'cantidad_total': 1,
+                    'costo_unitario': parseFloat(dataProducto.valor),
+                    'costo': parseFloat(dataProducto.valor),
+                    'porcentaje_desperdicio': 0,
+                    'porcentaje_rendimiento': 0,
+                    'distancia': 1,
+                    'costo_total': parseFloat(dataProducto.valor)
+
+                }
+                arrayProductos.transportes.push(data);
+                addItemToTable(data, 'transportes');
             }
 
             calcularTotalesProductos();

@@ -23,7 +23,7 @@ let lenguajeDatatable = {
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
 }
-//TABLA DE EQUIPOS
+//TABLA DE TRANSPORTE
 transportes_table = $('#transportesTable').DataTable({
     pageLength: 15,
     dom: 'Brtip',
@@ -165,7 +165,7 @@ function searchTransportes (event) {
     transportes_table.context[0].jqXHR.abort();
     transportes_table.ajax.reload();
 }
-//TRAER DATOS DE EQUIPOS POR PRIMERA VEZ
+//TRAER DATOS DE TRANSPORTES POR PRIMERA VEZ
 transportes_table.ajax.reload();
 //BOTON ACCION ABRIR MODAL
 $(document).on('click', '#createTransporte', function () {
@@ -196,7 +196,7 @@ $(document).on('click', '#saveTransporte', function () {
         valor: $("#valor_unitario").val(),
         tipo_proveedor: $("#tipo_proveedor").val(),
         cantidad: $("#cantidad").val(),
-        tipo_producto: 1
+        tipo_producto: 3
     }
 
     $.ajax({
