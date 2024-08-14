@@ -86,6 +86,7 @@ class APUController extends Controller
             'productos.*.costo_total' => 'required|min:0',
             'productos.*.porcentaje_desperdicio' => 'required|min:0',
             'productos.*.porcentaje_rendimiento' => 'required|min:0',
+            'productos.*.distancia' => 'required|min:0',
             'productos.*.unidad_medida' => 'required',
         ];
 
@@ -107,7 +108,7 @@ class APUController extends Controller
 
         $totalAPU = 0;
         $productos = $request->get('productos');
-        
+
         if ($productos) {
             foreach ($productos as $producto) {
                 $producto = (object)$producto;
@@ -121,6 +122,7 @@ class APUController extends Controller
                     'prestaciones' => $producto->prestaciones,
                     'desperdicio' => $producto->porcentaje_desperdicio,
                     'rendimiento' => $producto->porcentaje_rendimiento,
+                    'distancia' => $producto->distancia,
                     'total' => $producto->costo_total,
                 ]);
             }
@@ -145,6 +147,7 @@ class APUController extends Controller
             'productos.*.costo_total' => 'required|min:0',
             'productos.*.porcentaje_desperdicio' => 'required|min:0',
             'productos.*.porcentaje_rendimiento' => 'required|min:0',
+            'productos.*.distancia' => 'required|min:0',
             'productos.*.unidad_medida' => 'required',
         ];
 
@@ -179,10 +182,11 @@ class APUController extends Controller
                     'prestaciones' => $producto->prestaciones,
                     'desperdicio' => $producto->porcentaje_desperdicio,
                     'rendimiento' => $producto->porcentaje_rendimiento,
+                    'distancia' => $producto->distancia,
                     'total' => $producto->costo_total,
                 ]);
             }
-        }        
+        }
 
         return response()->json([
             'success'=>	true,
