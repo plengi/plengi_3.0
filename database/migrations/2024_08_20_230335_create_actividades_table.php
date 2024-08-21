@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('apu_detalles', function (Blueprint $table) {
+        Schema::create('actividades', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_apu');
-            $table->integer('id_producto');
-            $table->integer('cantidad');
-            $table->integer('costo');
-            $table->integer('desperdicio');
-            $table->integer('rendimiento');
-            $table->integer('total');
+            $table->string('nombre', 200);
+            $table->string('valor_total', 100)->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('apu_detalles');
+        Schema::dropIfExists('actividades');
     }
 };

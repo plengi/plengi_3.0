@@ -31,6 +31,7 @@ use App\Http\Controllers\ChangePassword;
 //SISTEMA
 use App\Http\Controllers\APUController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\ActividadesController;
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -43,6 +44,12 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/apu-read', 'read');
 		Route::delete('/apu-delete', 'delete');
 
+	});
+
+	//ACTIVIDADES
+	Route::controller(ActividadesController::class)->group(function () {
+		Route::get('/actividades', 'index')->name('actividades');
+		Route::get('/actividades-read', 'read');
 	});
 
 	Route::controller(ProductosController::class)->group(function () {
@@ -74,8 +81,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/transportes-update', 'update')->name('transportes-update');
 		Route::delete('/transportes-delete', 'delete')->name('transportes-delete');
 
+		//COMBO PRODUCTOS
 		Route::get('/productos-combo', 'combo');
-
 	});
 });
 
