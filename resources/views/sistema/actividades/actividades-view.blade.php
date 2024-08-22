@@ -83,6 +83,7 @@
             width: 100%;
             border-radius: 5px;
             border: solid 1px #858585;
+            text-align: end;
         }
 
         .foot-totals {

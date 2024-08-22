@@ -206,4 +206,18 @@ class APUController extends Controller
         ]);
     }
 
+    public function combo (Request $request)
+    {
+        $apu = Apu::select(
+            \DB::raw('*'),
+            \DB::raw("nombre as text")
+        );
+
+        if ($request->get("search")) {
+            $apu->where('nombre', 'LIKE', '%' . $request->get("search") . '%');
+        }
+
+        return $apu->paginate(40);
+    }
+
 }

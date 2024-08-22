@@ -69,6 +69,10 @@ actividades_table = $('#actividadesTable').DataTable({
 var id_apu = 0;
 var id_tarjeta = 0;
 let arrayActividades = [];
+let arrayApuUsados = [];
+let arrayOrden = [];
+let initialState;
+var el = document.getElementById('example5');
 
 actividades_table.ajax.reload();
 
@@ -77,7 +81,15 @@ setTimeout(function(){
         group: 'nested',
         animation: 150,
         fallbackOnBody: true,
-        swapThreshold: 0.65
+        swapThreshold: 0.65,
+        onStart: function(evt) {
+            // Clona el estado inicial del DOM cuando se comienza a arrastrar
+            el = document.getElementById('example5');
+            initialState = el.cloneNode(true);
+        },
+        onEnd: function (evt) {
+            actualizarOrdenItems();
+        }
     });
 },50);
 
@@ -92,14 +104,16 @@ $(document).on('click', '#agregarTarjeta', function () {
     $("#nombre_tarjeta").removeClass("is-invalid");
 
     var nombreTarjeta = $("#nombre_tarjeta").val();
-    if (!nombreTarjeta) $("#nombre_tarjeta").addClass("is-invalid");
+    if (!nombreTarjeta) {
+        $("#nombre_tarjeta").addClass("is-invalid");
+        return;
+    }
     id_tarjeta++;
 
     let data = {
         'consecutivo': id_tarjeta,
         'nombre': nombreTarjeta,
         'subtotal': 0,
-        'apus': []
     }
 
     arrayActividades.push(data);
@@ -107,9 +121,9 @@ $(document).on('click', '#agregarTarjeta', function () {
 
     var html = `
         <p class="text-nombre">${nombreTarjeta}</p>
-        <p class="text-numero">${arrayActividades.length}.</p>
+        <p class="text-numero" id="text-numero-${id_tarjeta}">${arrayActividades.length}.</p>
 
-        <div class="list-group nested-sortable item-actividades">
+        <div class="list-group nested-sortable item-actividades" id="group-tarjeta-${id_tarjeta}">
         </div>
 
         <div class="row foot-totals">
@@ -124,7 +138,7 @@ $(document).on('click', '#agregarTarjeta', function () {
     `;
 
     var item = document.createElement('div');
-    item.setAttribute("id", "tarjeta"+id_tarjeta);
+    item.setAttribute("id", "tarjeta-"+id_tarjeta);
     item.setAttribute("class", "list-group-item tarjeta-desing");
     item.innerHTML = [
         html
@@ -144,3 +158,226 @@ function volverAPU () {
 
     actividades_table.ajax.reload();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('funciona?');
+});
+
+function actualizarOrdenItems() {
+    arrayOrden = [];
+    var tarjetas = $(".tarjeta-desing");
+
+    if (tarjetas.length) {
+        for (let i = 0; i < tarjetas.length; i++) {
+            let tarjeta = tarjetas[i];
+            let childrens = tarjeta.children;
+            let idTarjeta = tarjeta.id.split('-')[1];
+            let tarjetaEncontrada = arrayActividades.find(actividad => actividad.consecutivo === parseInt(idTarjeta));
+
+            let dataGrupo = {
+                'consecutivo': tarjetaEncontrada.consecutivo,
+                'nombre': tarjetaEncontrada.nombre,
+                'subtotal': 0,
+                'apus': []
+            };
+            
+            let grupoTarjeta = childrens[2].children;
+
+            for (let j = 0; j < grupoTarjeta.length; j++) {
+                let itemApu = grupoTarjeta[j];
+                let idApu = itemApu.id.split('-')[2];
+                if (itemApu.id.split('-')[0] == 'tarjeta') {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "La tarjera no puede estar dentro de otra tarjeta!",
+                        icon: "error",
+                        timer: 3000
+                    });
+                    revertToInitialState(el)
+                }
+                let apuEncontrado = arrayApuUsados.find(apu => apu.consecutivo === parseInt(idApu));
+                if (!apuEncontrado) continue;
+                let dataApu = {
+                    'id_apu': apuEncontrado.id_apu,
+                    'consecutivo': apuEncontrado.consecutivo,
+                    'nombre': apuEncontrado.nombre,
+                    'unidad_medida': apuEncontrado.unidad_medida,
+                    'cantidad': 0,
+                    'valor_unidad': apuEncontrado.valor_unidad,
+                    'valor_total': 0,
+                }
+                dataGrupo.apus.push(dataApu);
+            }
+            arrayOrden.push(dataGrupo);
+        }
+        actualizarEnumeracion();
+    }
+}
+
+function actualizarEnumeracion() {
+    if (!arrayOrden.length) return;
+
+    for (let i = 0; i < arrayOrden.length; i++) {
+        let tarjeta = arrayOrden[i];
+        $("#text-numero-"+tarjeta.consecutivo).text((i+1)+'.');
+        if (!tarjeta.apus) continue;
+        for (let j = 0; j < tarjeta.apus.length; j++) {
+            let apu = tarjeta.apus[j];
+            $("#apu-numero-"+apu.consecutivo).text((i+1)+'.'+(j+1)+'.');
+        }
+    }
+}
+
+function revertToInitialState(container) {
+    // Elimina todos los elementos actuales
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    // Añade de nuevo los elementos clonados
+    [...initialState.children].forEach(child => {
+        container.appendChild(child.cloneNode(true));
+    });
+
+    var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
+
+    for (var i = 0; i < nestedSortables.length; i++) {
+        new Sortable(nestedSortables[i], {
+            group: 'nested',
+            animation: 150,
+            fallbackOnBody: true,
+            swapThreshold: 0.65,
+            onStart: function(evt) {
+                // Clona el estado inicial del DOM cuando se comienza a arrastrar
+                el = document.getElementById('example5');
+                initialState = el.cloneNode(true);
+            },
+            onEnd: function (evt) {
+                calcularTotales();
+            }
+        });
+    }
+}
+
+function calcularTotales() {
+    actualizarOrdenItems();
+    if (!arrayOrden.length) return;
+    console.log('calcularTotales: ',arrayOrden);
+    for (let i = 0; i < arrayOrden.length; i++) {
+        let tarjeta = arrayOrden[i];
+        var totalTarjeta = 0;
+        if (tarjeta.apus.length) {
+            for (let j = 0; j < tarjeta.apus.length; j++) {
+                let apu = tarjeta.apus[j];
+                console.log('apu: ',apu);
+                let cantidad = $("#input-apu-"+apu.consecutivo).val();
+                let total = cantidad * apu.valor_unidad;
+                arrayOrden[i].apus[j].cantidad = cantidad;
+                arrayOrden[i].apus[j].valor_total = total;
+                totalTarjeta+= total;
+                $("#total-apu-"+apu.consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                    total
+                ));
+            }
+        }
+        $("#subtotal-tarjeta-"+tarjeta.consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+            totalTarjeta
+        ));
+    }
+}
+
+$(function () {
+
+    $('#id_apu').select2({
+        theme: 'bootstrap-5',
+        delay: 250,
+        placeholder: "Seleccione un Apu",
+        language: {
+            noResults: function() {
+                return "No hay resultado";
+            },
+            searching: function() {
+                return "Buscando..";
+            }
+        },
+        ajax: {
+            url: 'apu-combo',
+            dataType: 'json',
+
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                    tipo_producto: $("#tipo_recurso").val(),
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: data.data
+                };
+            }
+        }
+    });
+
+    $('#id_apu').on('select2:close', function(event) {
+        var dataApu = $('#id_apu').select2('data');
+
+        if (dataApu && dataApu.length) {
+            dataApu = dataApu[0];
+            console.log('datos: ',dataApu);
+
+            id_apu++;
+
+            let data = {
+                'id_apu': dataApu.id,
+                'consecutivo': id_apu,
+                'nombre': dataApu.nombre,
+                'unidad_medida': dataApu.unidad_medida,
+                'cantidad': 0,
+                'valor_unidad': dataApu.valor_total,
+                'valor_total': 0,
+            }
+        
+            arrayApuUsados.push(data);
+
+            var html = `
+                <div class="col-1 item-componente-1" id="apu-numero-${id_apu}">
+                    ${id_tarjeta+'.'+id_apu}
+                </div>
+                <div class="col-4 item-componente-1">
+                    ${dataApu.nombre}
+                </div>
+                <div class="col-1 item-componente-1">
+                    ${dataApu.unidad_medida}
+                </div>
+                <div class="col-2 item-componente-1">
+                    <input id="input-apu-${id_apu}" type="text" class="input-cantidad" value="0" onchange="calcularTotales()" onfocus="this.select();" />
+                </div>
+                <div class="col-2 item-componente-1" style="text-align: end;">
+                    ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                        dataApu.valor_total
+                    )}
+                </div>
+                <div class="col-2 item-componente-2" id="total-apu-${id_apu}" style="text-align: end;">
+                    0
+                </div>
+            `;
+
+            var item = document.createElement('div');
+            item.setAttribute("id", "apu-item-"+id_apu);
+            item.setAttribute("class", "list-group-item row item-group");
+            item.innerHTML = [
+                html
+            ].join('');
+            document.getElementById('group-tarjeta-'+id_tarjeta).insertBefore(item, null);
+
+            el = document.getElementById('example5');
+            initialState = el.cloneNode(true);
+            revertToInitialState(el);
+        }
+
+        $('#id_apu').val('');
+        $('#id_apu').change();
+    });
+
+});

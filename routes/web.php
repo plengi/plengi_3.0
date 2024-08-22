@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::put('/apu', 'update');
 		Route::get('/apu-read', 'read');
 		Route::delete('/apu-delete', 'delete');
-
+		Route::get('/apu-combo', 'combo');
 	});
 
 	//ACTIVIDADES

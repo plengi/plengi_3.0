@@ -50,6 +50,7 @@
                         El campo es requerido
                     </div>
                 </div>
+                
             </form>
 
             <div style="place-content: center; display: flex; color: black; font-weight: bold;">
