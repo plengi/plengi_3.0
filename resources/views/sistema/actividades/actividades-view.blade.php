@@ -126,7 +126,7 @@
 
             <div id="actions-actividades-create" class="row" style="z-index: 9; display: none;">
                 <div class="col-12 col-md-6 col-sm-6">
-                    <button type="button" class="btn btn-danger btn-sm" id="volverActividades">
+                    <button type="button" class="btn btn-danger btn-sm" id="volverActividades" onclick="volverActividades()">
                         Cancelar
                     </button>
                     <button type="button" class="btn btn-success btn-sm" id="crearActividades">

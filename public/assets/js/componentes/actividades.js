@@ -309,9 +309,6 @@ function crearAPUItemHtml (dataApu) {
     revertToInitialState(el);
 }
 //VOLVER A TABLA INICIAL
-$(document).on('click', '#volverActividades', function () {
-    volverActividades();
-});
 function volverActividades () {
     $("#actions-actividades-component"). show();
     $("#table-actividades-component"). show();
