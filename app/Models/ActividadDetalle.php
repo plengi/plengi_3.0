@@ -18,4 +18,9 @@ class ActividadDetalle extends Model
         'valor_unidad',
         'valor_total',
     ];
+
+    public function apu()
+	{
+		return $this->belongsTo(Apu::class, 'id_apu');
+	}
 }

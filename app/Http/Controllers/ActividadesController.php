@@ -44,7 +44,7 @@ class ActividadesController extends Controller
             $columnName = $columnName_arr[$columnIndex]['data']; // Column name
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
 
-            $actividades = Actividades::with('detalles')
+            $actividades = Actividades::with('detalles.apu')
                 ->orderBy($columnName,$columnSortOrder);
 
             if ($request->get('search')) {
@@ -126,7 +126,72 @@ class ActividadesController extends Controller
         return response()->json([
             'success'=>	true,
             'data' => '',
-            'message'=> 'APU creado con exito!'
+            'message'=> 'Actividad creada con exito!'
+        ]);
+    }
+
+    public function update (Request $request)
+    {
+        $rules = [
+            'nombre' => 'required|min:1|max:200',
+            'indirectos' => 'array|required',
+            'tarjetas' => 'array|required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $this->messages);
+
+		if ($validator->fails()){
+            return response()->json([
+                "success"=>false,
+                'data' => [],
+                "message"=>$validator->errors()
+            ], 422);
+        }
+
+        $actividades = Actividades::find($request->get('id'));
+        ActividadDetalle::where('id_actividad', $request->get('id'))->delete();
+
+        foreach ($request->get('indirectos') as $indirecto) {
+            $indirecto = (object)$indirecto;
+            $actividades->{'porcentaje_'.$indirecto->nombre} = $indirecto->porcentaje;
+        }
+
+        $actividades->costo_directo = $request->get('costo_directo');
+        $actividades->costo_indirecto = $request->get('costo_indirecto');
+        $actividades->costo_total = $request->get('costo_total');
+        $actividades->nombre = $request->get('nombre');
+        $actividades->save();
+
+        foreach ($request->get('tarjetas') as $tarjeta) {
+            $tarjeta = (object)$tarjeta;
+            foreach ($tarjeta->apus as $apu) {
+                $apu = (object)$apu;
+                $detalles = ActividadDetalle::create([
+                    'id_actividad' => $actividades->id,
+                    'codigo_tarjeta' => $tarjeta->consecutivo,
+                    'nombre_tarjeta' => $tarjeta->nombre,
+                    'id_apu' => $apu->id_apu,
+                    'cantidad' => $apu->cantidad,
+                    'valor_unidad' => $apu->valor_unidad,
+                    'valor_total' => $apu->valor_total,
+                ]);
+            }
+        }
+        return response()->json([
+            'success'=>	true,
+            'data' => '',
+            'message'=> 'Actividad actualizada con exito!'
+        ]);
+    }
+
+    public function delete (Request $request)
+    {
+        Actividades::where('id', $request->get('id'))->delete();
+        ActividadDetalle::where('id_actividad', $request->get('id'))->delete();
+
+        return response()->json([
+            'success'=>	true,
+            'message'=> 'Actividad eliminada con exito!'
         ]);
     }
 

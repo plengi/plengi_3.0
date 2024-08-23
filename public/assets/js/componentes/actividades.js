@@ -92,14 +92,104 @@ actividades_table.on('click', '.edit-actividades', function() {
     $("#table-actividades-component").hide();
     $("#actions-actividades-create").show();
     $("#create-actividades-component").show();
-    clearFormActividad();
 
     $("#crearActividades").hide();
     $("#actualizarActividades").show();
     $('#id_actividades_up').val(data.id);
     $('#nombre_actividades').val(data.nombre);
 
-    console.log(data);
+    itemsCostosIndirectos = [
+        { 'nombre': 'administracion', 'porcentaje': data.porcentaje_administracion, 'total': 0 },
+        { 'nombre': 'imprevistos', 'porcentaje': data.porcentaje_imprevistos, 'total': 0 },
+        { 'nombre': 'utilidad', 'porcentaje': data.porcentaje_utilidad, 'total': 0 },
+    ];
+
+    $("#administracion-porcentaje").val(parseInt(data.porcentaje_administracion));
+    $("#imprevistos-porcentaje").val(parseInt(data.porcentaje_imprevistos));
+    $("#utilidad-porcentaje").val(parseInt(data.porcentaje_utilidad));
+
+    //AGREGAR COMPONENTES
+    data.detalles.forEach(detalle => {
+        id_apu++;
+        console.log('detalle: ',detalle);
+        var tarjetaEncontrada = arrayTarjetas.find(tarjeta => tarjeta.codigo_tarjeta === detalle.codigo_tarjeta);
+        //AGREGAR TARJETAS
+        if (!tarjetaEncontrada) {
+            id_tarjeta++;
+            tarjetaEncontrada = {
+                'codigo_tarjeta': detalle.codigo_tarjeta,
+                'consecutivo': id_tarjeta,
+                'nombre': detalle.nombre_tarjeta,
+                'subtotal': 0,
+            }
+            arrayTarjetas.push(tarjetaEncontrada);
+            crearTarjetaHtml(detalle.nombre_tarjeta);
+        }
+        //AGREGAR APUS
+        let data = {
+            'id_tarjeta': tarjetaEncontrada.consecutivo,
+            'id_apu': detalle.id_apu,
+            'consecutivo': id_apu,
+            'nombre': detalle.apu.nombre,
+            'unidad_medida': detalle.apu.unidad_medida,
+            'cantidad': parseInt(detalle.cantidad),
+            'valor_unidad': detalle.apu.valor_total,
+            'valor_total': detalle.valor_total,
+        }
+        arrayApuUsados.push(data);
+        crearAPUItemHtml(data);
+    });
+    //CALCULAR TOTALES
+    actualizarOrdenItems();
+    calcularCostosDirectos();
+    calcularCostosIndirectos();
+    calcularTotal();
+});
+//DELETE ACTIVIDAD
+actividades_table.on('click', '.drop-actividades', function() {
+    var trActividad = $(this).closest('tr');
+    var id = this.id.split('_')[1];
+    var data = getDataById(id, actividades_table);
+
+    Swal.fire({
+        title: 'Eliminar Actividad: '+data.nombre+'?',
+        text: "No se podrá revertir!",
+        type: 'warning',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Borrar!',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.value){
+            $.ajax({
+                url: 'actividades-delete',
+                method: 'DELETE',
+                data: JSON.stringify({id: id}),
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+            }).done((res) => {
+                actividades_table.ajax.reload();
+                Swal.fire({
+                    title: "Actividad eliminado!",
+                    text: "La actividad "+data.nombre+" fue eliminadas con exito!",
+                    icon: "success",
+                    timer: 1500
+                })
+            }).fail((res) => {
+                Swal.fire({
+                    title: "Error!",
+                    text: "La actividad "+data.nombre+" no pudo ser eliminado!",
+                    icon: "error",
+                    timer: 1500
+                });
+            });
+        }
+    });
 });
 
 actividades_table.ajax.reload();
@@ -145,10 +235,14 @@ $(document).on('click', '#agregarTarjeta', function () {
         'nombre': nombreTarjeta,
         'subtotal': 0,
     }
-
+    
     arrayTarjetas.push(data);
     $("#nombre_tarjeta").val('');
 
+    crearTarjetaHtml(nombreTarjeta);
+});
+//GENERAR ITEM DE TARJETA
+function crearTarjetaHtml (nombreTarjeta = null) {
     var html = `
         <p class="text-nombre">${nombreTarjeta}</p>
         <p class="text-numero" id="text-numero-${id_tarjeta}">${arrayTarjetas.length}.</p>
@@ -174,7 +268,46 @@ $(document).on('click', '#agregarTarjeta', function () {
         html
     ].join('');
     document.getElementById('example5').insertBefore(item, null);
-});
+}
+//GENERAR ITEM DE APU
+function crearAPUItemHtml (dataApu) {
+    var html = `
+        <div class="col-1 item-componente-1" id="apu-numero-${id_apu}">
+            ${dataApu.id_tarjeta+'.'+id_apu}
+        </div>
+        <div class="col-4 item-componente-1">
+            ${dataApu.nombre}
+        </div>
+        <div class="col-1 item-componente-1">
+            ${dataApu.unidad_medida}
+        </div>
+        <div class="col-2 item-componente-1">
+            <input id="input-apu-${id_apu}" type="text" class="input-cantidad" value="${dataApu.cantidad}" onchange="changeValorDirecto()" onfocus="this.select();" />
+        </div>
+        <div class="col-2 item-componente-1" style="text-align: end;">
+            ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                dataApu.valor_unidad
+            )}
+        </div>
+        <div class="col-2 item-componente-2" id="total-apu-${id_apu}" style="text-align: end;">
+            ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                dataApu.valor_total
+            )}
+        </div>
+    `;
+
+    var item = document.createElement('div');
+    item.setAttribute("id", "apu-item-"+id_apu);
+    item.setAttribute("class", "list-group-item row item-group");
+    item.innerHTML = [
+        html
+    ].join('');
+    document.getElementById('group-tarjeta-'+dataApu.id_tarjeta).insertBefore(item, null);
+
+    el = document.getElementById('example5');
+    initialState = el.cloneNode(true);
+    revertToInitialState(el);
+}
 //VOLVER A TABLA INICIAL
 $(document).on('click', '#volverActividadeses', function () {
     volverActividades();
@@ -186,6 +319,7 @@ function volverActividades () {
     $("#create-actividades-component").hide();
 
     actividades_table.ajax.reload();
+    clearFormActividad();
 }
 //ACTUALIZAR ARRAY ORDENADO POR ITEMS
 function actualizarOrdenItems() {
@@ -359,7 +493,7 @@ $(".input-cantidad").on('keydown', function(event) {
         calcularTotal();
     }
 });
-
+//METODO POST PARA CREAR ACTIVIDAD
 $(document).on('click', '#crearActividades', function () {
     let data = {
         'nombre': $("#nombre_actividades").val(),
@@ -407,6 +541,55 @@ $(document).on('click', '#crearActividades', function () {
         });
     });
 });
+//METODO PUT PARA ACTUALIZAR ACTIVIDAD
+$(document).on('click', '#actualizarActividades', function () {
+    let data = {
+        'id': $("#id_actividades_up").val(),
+        'nombre': $("#nombre_actividades").val(),
+        'costo_directo': costoDirecto,
+        'costo_indirecto': costoIndirecto,
+        'costo_total': costoTotal,
+        'tarjetas': arrayOrden,
+        'indirectos': itemsCostosIndirectos
+    }
+
+    $("#volverActividades").hide();
+    $("#actualizarActividades").hide();
+    $("#crearActividadesLoading").show();
+
+    $.ajax({
+        url: 'actividades-update',
+        method: 'PUT',
+        data: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    }).done((res) => {
+        if(res.success){
+            $("#volverActividades").show();
+            $("#actualizarActividades").show();
+            $("#crearActividadesLoading").hide();
+            volverActividades();
+            Swal.fire({
+                title: "Actividad actualizada!",
+                text: "La Actividad fue actualizada con exito!",
+                icon: "success",
+                timer: 1500
+            });
+        }
+    }).fail((err) => {
+        $("#volverActividades").show();
+        $("#actualizarActividades").show();
+        $("#crearActividadesLoading").hide();
+        Swal.fire({
+            title: "Error!",
+            text: "Error al actualizar nueva Actividad!",
+            icon: "error",
+            timer: 1500
+        });
+    });
+});
 
 function clearFormActividad() {
     $('#example5').empty();
@@ -425,6 +608,7 @@ function clearFormActividad() {
         { 'nombre': 'utilidad', 'porcentaje': 0, 'total': 0 },
     ];
     calcularCostosIndirectos();
+    $("#id_actividades_up").val('');
     $("#directo-costo").text('0,00');
     $("#totalGeneralActividad").text('0,00');
     $("#administracion-porcentaje").val(0);
@@ -485,6 +669,7 @@ $(function () {
             id_apu++;
             dataApu = dataApu[0];
             let data = {
+                'id_tarjeta': id_tarjeta,
                 'id_apu': dataApu.id,
                 'consecutivo': id_apu,
                 'nombre': dataApu.nombre,
@@ -495,41 +680,7 @@ $(function () {
             }
         
             arrayApuUsados.push(data);
-
-            var html = `
-                <div class="col-1 item-componente-1" id="apu-numero-${id_apu}">
-                    ${id_tarjeta+'.'+id_apu}
-                </div>
-                <div class="col-4 item-componente-1">
-                    ${dataApu.nombre}
-                </div>
-                <div class="col-1 item-componente-1">
-                    ${dataApu.unidad_medida}
-                </div>
-                <div class="col-2 item-componente-1">
-                    <input id="input-apu-${id_apu}" type="text" class="input-cantidad" value="0" onchange="changeValorDirecto()" onfocus="this.select();" />
-                </div>
-                <div class="col-2 item-componente-1" style="text-align: end;">
-                    ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-                        dataApu.valor_total
-                    )}
-                </div>
-                <div class="col-2 item-componente-2" id="total-apu-${id_apu}" style="text-align: end;">
-                    0
-                </div>
-            `;
-
-            var item = document.createElement('div');
-            item.setAttribute("id", "apu-item-"+id_apu);
-            item.setAttribute("class", "list-group-item row item-group");
-            item.innerHTML = [
-                html
-            ].join('');
-            document.getElementById('group-tarjeta-'+id_tarjeta).insertBefore(item, null);
-
-            el = document.getElementById('example5');
-            initialState = el.cloneNode(true);
-            revertToInitialState(el);
+            crearAPUItemHtml(data);
         }
 
         $('#id_apu').val('');

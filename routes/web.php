@@ -51,6 +51,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/actividades', 'index')->name('actividades');
 		Route::post('/actividades-create', 'create');
 		Route::get('/actividades-read', 'read');
+		Route::put('/actividades-update', 'update');
+		Route::delete('/actividades-delete', 'delete');
 	});
 
 	Route::controller(ProductosController::class)->group(function () {
