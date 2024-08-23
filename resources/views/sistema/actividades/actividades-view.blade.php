@@ -92,6 +92,17 @@
             margin-left: 0px;
         }
 
+        .table-actividades thead th {
+            padding: 0.2rem 1.5rem !important;
+            text-transform: capitalize !important;
+            letter-spacing: 0px !important;
+            border-bottom: 1px solid #e9ecef !important;
+        }
+
+        .line-item {
+            text-align: center; background-color: #6d6d6d; color: #484848; font-weight: bold; font-size: 18px; height: 1px; margin-top: 1px; margin-bottom: 1px;
+        }
+
     </style>
 
     <script src="assets/js/sistema/jquery-3.5.1.js"></script>

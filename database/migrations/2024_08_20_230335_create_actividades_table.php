@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('actividades', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 200);
-            $table->string('valor_total', 100)->nullable();
+            $table->decimal('costo_directo', 20)->default(0);
+            $table->decimal('costo_indirecto', 20)->default(0);
+            $table->decimal('costo_total', 20)->default(0);
+            $table->decimal('porcentaje_administracion', 20)->default(0);
+            $table->decimal('porcentaje_imprevistos', 20)->default(0);
+            $table->decimal('porcentaje_utilidad', 20)->default(0);
             $table->timestamps();
         });
     }

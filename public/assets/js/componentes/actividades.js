@@ -1,5 +1,20 @@
 var actividades_table = null;
 var searchValueActividades = '';
+var id_apu = 0;
+var id_tarjeta = 0;
+let arrayTarjetas = [];
+let arrayApuUsados = [];
+let arrayOrden = [];
+var costoDirecto = 0;
+var costoIndirecto = 0;
+var costoTotal = 0;
+let itemsCostosIndirectos = [
+    { 'nombre': 'administracion', 'porcentaje': 0, 'total': 0 },
+    { 'nombre': 'imprevistos', 'porcentaje': 0, 'total': 0 },
+    { 'nombre': 'utilidad', 'porcentaje': 0, 'total': 0 },
+];
+let initialState;
+var el = document.getElementById('example5');
 let lenguajeDatatable = {
     "sProcessing":     "",
     "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -23,7 +38,6 @@ let lenguajeDatatable = {
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
 }
-
 //TABLA APU
 actividades_table = $('#actividadesTable').DataTable({
     pageLength: 15,
@@ -54,7 +68,9 @@ actividades_table = $('#actividadesTable').DataTable({
     },
     columns: [
         {"data":'nombre'},
-        {"data":'valor_total', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
+        {"data":'costo_directo', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
+        {"data":'costo_indirecto', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
+        {"data":'costo_total', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
         {
             "data": function (row, type, set){
                 var html = '';
@@ -65,17 +81,29 @@ actividades_table = $('#actividadesTable').DataTable({
         },
     ]
 });
+//EDITAR ACTIVIDAD
+actividades_table.on('click', '.edit-actividades', function() {
+    clearFormActividad();
 
-var id_apu = 0;
-var id_tarjeta = 0;
-let arrayActividades = [];
-let arrayApuUsados = [];
-let arrayOrden = [];
-let initialState;
-var el = document.getElementById('example5');
+    var id = this.id.split('_')[1];
+    var data = getDataById(id, actividades_table);
+
+    $("#actions-actividades-component").hide();
+    $("#table-actividades-component").hide();
+    $("#actions-actividades-create").show();
+    $("#create-actividades-component").show();
+    clearFormActividad();
+
+    $("#crearActividades").hide();
+    $("#actualizarActividades").show();
+    $('#id_actividades_up').val(data.id);
+    $('#nombre_actividades').val(data.nombre);
+
+    console.log(data);
+});
 
 actividades_table.ajax.reload();
-
+//INICIALIZAR SORTABLEJS
 setTimeout(function(){
     new Sortable(example5, {
         group: 'nested',
@@ -89,17 +117,19 @@ setTimeout(function(){
         },
         onEnd: function (evt) {
             actualizarOrdenItems();
+            calcularCostosDirectos();
         }
     });
 },50);
-
+//MOSTRAR CREACIÓN DE ACTIVIDADES
 $(document).on('click', '#createActividades', function () {
     $("#actions-actividades-component").hide();
     $("#table-actividades-component").hide();
     $("#actions-actividades-create").show();
     $("#create-actividades-component").show();
+    clearFormActividad();
 });
-
+//CREAR ITEM DE TARJETA
 $(document).on('click', '#agregarTarjeta', function () {
     $("#nombre_tarjeta").removeClass("is-invalid");
 
@@ -116,19 +146,19 @@ $(document).on('click', '#agregarTarjeta', function () {
         'subtotal': 0,
     }
 
-    arrayActividades.push(data);
+    arrayTarjetas.push(data);
     $("#nombre_tarjeta").val('');
 
     var html = `
         <p class="text-nombre">${nombreTarjeta}</p>
-        <p class="text-numero" id="text-numero-${id_tarjeta}">${arrayActividades.length}.</p>
+        <p class="text-numero" id="text-numero-${id_tarjeta}">${arrayTarjetas.length}.</p>
 
         <div class="list-group nested-sortable item-actividades" id="group-tarjeta-${id_tarjeta}">
         </div>
 
         <div class="row foot-totals">
             <div class="col-8 item-componente-2"><p style="margin-bottom: 0px;"></p></div>
-            <div class="col-2 item-componente-2"><p style="margin-bottom: 0px;">Subtotal</p></div>
+            <div class="col-2 item-componente-2"><p style="margin-bottom: 0px; text-align: end;">Subtotal</p></div>
             <div class="col-2 item-componente-3">
                 <p id="subtotal-tarjeta-${id_tarjeta}" style="margin-bottom: 0px; text-align: end;">
                 0 &nbsp;
@@ -145,24 +175,19 @@ $(document).on('click', '#agregarTarjeta', function () {
     ].join('');
     document.getElementById('example5').insertBefore(item, null);
 });
-
-$(document).on('click', '#volverActividades', function () {
-    volverAPU();
+//VOLVER A TABLA INICIAL
+$(document).on('click', '#volverActividadeses', function () {
+    volverActividades();
 });
-
-function volverAPU () {
-    $("#actions-actividades-component").show();
-    $("#table-actividades-component").show();
+function volverActividades () {
+    $("#actions-actividades-component"). show();
+    $("#table-actividades-component"). show();
     $("#actions-actividades-create").hide();
     $("#create-actividades-component").hide();
 
     actividades_table.ajax.reload();
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('funciona?');
-});
-
+//ACTUALIZAR ARRAY ORDENADO POR ITEMS
 function actualizarOrdenItems() {
     arrayOrden = [];
     var tarjetas = $(".tarjeta-desing");
@@ -172,7 +197,7 @@ function actualizarOrdenItems() {
             let tarjeta = tarjetas[i];
             let childrens = tarjeta.children;
             let idTarjeta = tarjeta.id.split('-')[1];
-            let tarjetaEncontrada = arrayActividades.find(actividad => actividad.consecutivo === parseInt(idTarjeta));
+            let tarjetaEncontrada = arrayTarjetas.find(actividad => actividad.consecutivo === parseInt(idTarjeta));
 
             let dataGrupo = {
                 'consecutivo': tarjetaEncontrada.consecutivo,
@@ -213,7 +238,7 @@ function actualizarOrdenItems() {
         actualizarEnumeracion();
     }
 }
-
+//ACTUALIZAR NUMERACIÓN DE ITEMS
 function actualizarEnumeracion() {
     if (!arrayOrden.length) return;
 
@@ -227,20 +252,18 @@ function actualizarEnumeracion() {
         }
     }
 }
-
+//REVERTIR MOVIMIENTO DE TARJETA
 function revertToInitialState(container) {
     // Elimina todos los elementos actuales
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
-
     // Añade de nuevo los elementos clonados
     [...initialState.children].forEach(child => {
         container.appendChild(child.cloneNode(true));
     });
-
+    //REINICIAR SORTABLE JS
     var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
-
     for (var i = 0; i < nestedSortables.length; i++) {
         new Sortable(nestedSortables[i], {
             group: 'nested',
@@ -253,28 +276,29 @@ function revertToInitialState(container) {
                 initialState = el.cloneNode(true);
             },
             onEnd: function (evt) {
-                calcularTotales();
+                actualizarOrdenItems();
+                calcularCostosDirectos();
             }
         });
     }
 }
 
-function calcularTotales() {
-    actualizarOrdenItems();
+function calcularCostosDirectos() {
     if (!arrayOrden.length) return;
-    console.log('calcularTotales: ',arrayOrden);
+    costoDirecto = 0;
+
     for (let i = 0; i < arrayOrden.length; i++) {
         let tarjeta = arrayOrden[i];
         var totalTarjeta = 0;
         if (tarjeta.apus.length) {
             for (let j = 0; j < tarjeta.apus.length; j++) {
                 let apu = tarjeta.apus[j];
-                console.log('apu: ',apu);
                 let cantidad = $("#input-apu-"+apu.consecutivo).val();
                 let total = cantidad * apu.valor_unidad;
                 arrayOrden[i].apus[j].cantidad = cantidad;
                 arrayOrden[i].apus[j].valor_total = total;
                 totalTarjeta+= total;
+                costoDirecto+= total;
                 $("#total-apu-"+apu.consecutivo).text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
                     total
                 ));
@@ -284,6 +308,141 @@ function calcularTotales() {
             totalTarjeta
         ));
     }
+    $("#directo-costo").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        costoDirecto
+    ));
+}
+
+function calcularCostosIndirectos() {
+    costoIndirecto = 0;
+    for (let i = 0; i < itemsCostosIndirectos.length; i++) {
+        let indirecto = itemsCostosIndirectos[i];
+        var porcentaje = $("#"+indirecto.nombre+'-porcentaje').val();
+        var total = costoDirecto * (porcentaje / 100);
+        itemsCostosIndirectos[i].porcentaje = porcentaje;
+        costoIndirecto+= total;
+        $("#"+indirecto.nombre+'-total').text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+            total
+        ));
+    }
+    $("#indirecto-total").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        costoIndirecto
+    ));
+}
+
+function changePorcentajeIndirecto() {
+    calcularCostosIndirectos();
+    calcularTotal();
+}
+
+function changeValorDirecto() {
+    calcularCostosDirectos();
+    calcularCostosIndirectos();
+    calcularTotal();
+}
+
+function calcularTotal() {
+    costoTotal = 0;
+    costoTotal = costoDirecto + costoIndirecto;
+    var textTotal = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        costoTotal
+    );
+    $("#totalGeneralActividad").text(textTotal);
+    $("#text-presupuesto-general").text('PRESUPUESTO GENERAL: '+textTotal);
+    
+}
+//CALCULAR 
+$(".input-cantidad").on('keydown', function(event) {
+    if(event.keyCode == 13){
+        calcularCostosDirectos();
+        calcularCostosIndirectos();
+        calcularTotal();
+    }
+});
+
+$(document).on('click', '#crearActividades', function () {
+    let data = {
+        'nombre': $("#nombre_actividades").val(),
+        'costo_directo': costoDirecto,
+        'costo_indirecto': costoIndirecto,
+        'costo_total': costoTotal,
+        'tarjetas': arrayOrden,
+        'indirectos': itemsCostosIndirectos
+    }
+
+    $("#volverActividades").hide();
+    $("#crearActividades").hide();
+    $("#crearActividadesLoading").show();
+
+    $.ajax({
+        url: 'actividades-create',
+        method: 'POST',
+        data: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    }).done((res) => {
+        if(res.success){
+            $("#volverActividades").show();
+            $("#crearActividades").show();
+            $("#crearActividadesLoading").hide();
+            volverActividades();
+            Swal.fire({
+                title: "Actividad creada!",
+                text: "La Actividad fue creada con exito!",
+                icon: "success",
+                timer: 1500
+            });
+        }
+    }).fail((err) => {
+        $("#volverActividades").show();
+        $("#crearActividades").show();
+        $("#crearActividadesLoading").hide();
+        Swal.fire({
+            title: "Error!",
+            text: "Error al crear nueva Actividad!",
+            icon: "error",
+            timer: 1500
+        });
+    });
+});
+
+function clearFormActividad() {
+    $('#example5').empty();
+
+    id_apu = 0;
+    id_tarjeta = 0;
+    arrayTarjetas = [];
+    arrayApuUsados = [];
+    arrayOrden = [];
+    costoDirecto = 0;
+    costoIndirecto = 0;
+    costoTotal = 0;
+    itemsCostosIndirectos = [
+        { 'nombre': 'administracion', 'porcentaje': 0, 'total': 0 },
+        { 'nombre': 'imprevistos', 'porcentaje': 0, 'total': 0 },
+        { 'nombre': 'utilidad', 'porcentaje': 0, 'total': 0 },
+    ];
+    calcularCostosIndirectos();
+    $("#directo-costo").text('0,00');
+    $("#totalGeneralActividad").text('0,00');
+    $("#administracion-porcentaje").val(0);
+    $("#imprevistos-porcentaje").val(0);
+    $("#utilidad-porcentaje").val(0);
+    $("#text-presupuesto-general").text('PRESUPUESTO GENERAL: 0,00');
+}
+
+//OBTENER DATOS DE LA TABLA
+function getDataById(idData, tabla) {
+    var data = tabla.rows().data();
+    for (let index = 0; index < data.length; index++) {
+        var element = data[index];
+        if(element.id == idData){
+            return element;
+        }
+    }
+    return false;
 }
 
 $(function () {
@@ -323,11 +482,8 @@ $(function () {
         var dataApu = $('#id_apu').select2('data');
 
         if (dataApu && dataApu.length) {
-            dataApu = dataApu[0];
-            console.log('datos: ',dataApu);
-
             id_apu++;
-
+            dataApu = dataApu[0];
             let data = {
                 'id_apu': dataApu.id,
                 'consecutivo': id_apu,
@@ -351,7 +507,7 @@ $(function () {
                     ${dataApu.unidad_medida}
                 </div>
                 <div class="col-2 item-componente-1">
-                    <input id="input-apu-${id_apu}" type="text" class="input-cantidad" value="0" onchange="calcularTotales()" onfocus="this.select();" />
+                    <input id="input-apu-${id_apu}" type="text" class="input-cantidad" value="0" onchange="changeValorDirecto()" onfocus="this.select();" />
                 </div>
                 <div class="col-2 item-componente-1" style="text-align: end;">
                     ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
@@ -378,6 +534,7 @@ $(function () {
 
         $('#id_apu').val('');
         $('#id_apu').change();
+        actualizarOrdenItems();
     });
 
 });

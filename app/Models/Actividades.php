@@ -11,6 +11,14 @@ class Actividades extends Model
 
     protected $fillable = [
         'nombre',
-        'valor_total',
+        'costo_directo',
+        'costo_indirecto',
+        'costo_total'
     ];
+
+    public function detalles()
+    {
+		return $this->hasMany(ActividadDetalle::class, 'id_actividad');
+	}
+
 }

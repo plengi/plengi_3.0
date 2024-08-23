@@ -40,14 +40,20 @@
 
             </form>
 
+            <div style="place-content: center; display: flex; color: black; font-weight: bold;">
+                TOTAL ACTIVIDAD:&nbsp;
+                <div id="totalGeneralActividad">0,00</div>
+            </div>
+
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
+
             <div style="border-bottom: solid 1px;">
-                <p style="margin-bottom: 0px; text-align: center; background-color: #2d67ce; color: white; font-weight: bold; font-size: 18px;">
-                    PRESUPUESTO GENERAL
+                <p id="text-presupuesto-general" style="margin-bottom: 0px; text-align: center; background-color: #2d67ce; color: white; font-weight: bold; font-size: 18px; border-top-right-radius: 5px; border-top-left-radius: 5px;">
+                    PRESUPUESTO GENERAL: 0,00
                 </p>
                 <div class="row">
                     <div class="col-1" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black;">
@@ -71,161 +77,67 @@
                 </div>
             </div>
 
-            <!-- <div id="tarjeta1" class="list-group-item tarjeta-desing" style="padding: 0px; border-radius: 5px; border-color: black; margin-bottom: 10px;">
-                    <p class="text-nombre">
-                        ACTIVIDADES PRELIMINARES
-                    </p>
-                    <p class="text-numero">
-                        1.
-                    </p>
-
-                    <div class="list-group nested-sortable item-actividades">
-                        <div class="list-group-item nested row" >
-                            <div class="col-1 item-componente-1">
-                                1.1
-                            </div>
-                            <div class="col-4 item-componente-1">
-                                Nombre del apu
-                            </div>
-                            <div class="col-1 item-componente-1">
-                                Ud
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                <input type="text" class="input-cantidad" />
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Valor Unitario
-                            </div>
-                            <div class="col-2 item-componente-2">
-                                Valor Total
-                            </div>
-                        </div>
-
-                        <div class="list-group-item nested row" >
-                            <div class="col-1 item-componente-1">
-                                1.1
-                            </div>
-                            <div class="col-4 item-componente-1">
-                                Nombre del apu
-                            </div>
-                            <div class="col-1 item-componente-1">
-                                Ud
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Cantidad
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Valor Unitario
-                            </div>
-                            <div class="col-2 item-componente-2">
-                                Valor Total
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row foot-totals">
-                        <div class="col-8 item-componente-2">
-                            <p style="margin-bottom: 0px;"></p>
-                        </div>
-                        <div class="col-2 item-componente-2">
-                            <p style="margin-bottom: 0px;">Subtotal</p>
-                        </div>
-                        <div class="col-2 item-componente-3">
-                            <p style="margin-bottom: 0px; text-align: end;">212 &nbsp;</p>
-                        </div>
-                    </div>
-
-                </div> -->
-
             <div id="example5" class="list-group " draggable="false" style="margin-top: 10px;">
+                
+            </div>
 
-                <!-- <div class="list-group-item nested row item-group">
-                    <div class="col-1 item-componente-1">
-                        1.1
+            <div class="row" style="height: 30px; background-color: #b4bede; width: 100%; margin-left: 0px; border-radius: 5px; margin-bottom: 10px; border: solid 1px black;">
+                <div class="col-10" style="font-size: 13px; font-weight: 500;color: black; text-align: end; font-weight: 600; align-content: center; font-weight: 700;">
+                    COSTOS DIRECTOS
+                </div>
+                <div class="col-2" id="directo-costo" style="font-size: 16px; font-weight: 500;color: black; font-weight: 600; text-align: end; align-content: center; font-weight: 700;">
+                    0.00
+                </div>
+            </div>
+
+            <div >
+                <p style="text-align: center; background-color: #059d7f; color: #ffffff; font-weight: bold; font-size: 15px; margin-bottom: 1px; border-top-right-radius: 5px; border-top-left-radius: 5px;">
+                    COSTOS INDIRECTOS
+                </p>
+
+                <div class="row">
+                    <div class="col-8" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black; text-align: end; font-weight: 600;">
+                        % ADMINISTRACIÓN
                     </div>
-                    <div class="col-4 item-componente-1">
-                        Nombre del apu
+                    <div class="col-2" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black;">
+                        <input type="number" class="input-cantidad" id="administracion-porcentaje" value="0" onchange="changePorcentajeIndirecto()" onfocus="this.select();" />
                     </div>
-                    <div class="col-1 item-componente-1">
-                        Ud
-                    </div>
-                    <div class="col-2 item-componente-1">
-                        Cantidad
-                    </div>
-                    <div class="col-2 item-componente-1">
-                        Valor Unitario
-                    </div>
-                    <div class="col-2 item-componente-2">
-                        Valor Total
+                    <div class="col-2" id="administracion-total" style="font-size: 13px; font-weight: 500;color: black; font-weight: 600; text-align: end; margin-left: -5px;">
+                        0.00
                     </div>
                 </div>
-
-                <div id="tarjeta2" class="list-group-item tarjeta-desing">
-                    <p class="text-nombre">
-                        TARJETA NUEVA
-                    </p>
-                    <p class="text-numero">
-                        2.
-                    </p>
-
-                    <div class="list-group nested-sortable item-actividades">
-
-                        <div class="list-group-item row item-group">
-                            <div class="col-1 item-componente-1">
-                                1.1
-                            </div>
-                            <div class="col-4 item-componente-1">
-                                Nombre del apu
-                            </div>
-                            <div class="col-1 item-componente-1">
-                                Ud
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Cantidad
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Valor Unitario
-                            </div>
-                            <div class="col-2 item-componente-2">
-                                Valor Total
-                            </div>
-                        </div>
-
-                        <div class="list-group-item row item-group" >
-                            <div class="col-1 item-componente-1">
-                                1.1
-                            </div>
-                            <div class="col-4 item-componente-1">
-                                Nombre del apu
-                            </div>
-                            <div class="col-1 item-componente-1">
-                                Ud
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Cantidad
-                            </div>
-                            <div class="col-2 item-componente-1">
-                                Valor Unitario
-                            </div>
-                            <div class="col-2 item-componente-2">
-                                Valor Total
-                            </div>
-                        </div>
+                <p  class="line-item"></p>
+                <div class="row">
+                    <div class="col-8" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black; text-align: end; font-weight: 600;">
+                        % IMPREVISTOS
                     </div>
-
-                    <div class="row">
-                        <div class="col-8 item-componente-2">
-                            <p style="margin-bottom: 0px;"></p>
-                        </div>
-                        <div class="col-2 item-componente-2">
-                            <p style="margin-bottom: 0px;">Subtotal</p>
-                        </div>
-                        <div class="col-2 item-componente-3">
-                            <p style="margin-bottom: 0px; text-align: end;">0 &nbsp;</p>
-                        </div>
+                    <div class="col-2" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black;">
+                        <input type="number" class="input-cantidad" id="imprevistos-porcentaje" value="0" onchange="changePorcentajeIndirecto()" onfocus="this.select();"/>
                     </div>
-
-                </div>  -->
+                    <div class="col-2" id="imprevistos-total" style="font-size: 13px; font-weight: 500;color: black; font-weight: 600; text-align: end; margin-left: -5px;">
+                        0.00
+                    </div>
+                </div>
+                <p  class="line-item"></p>
+                <div class="row">
+                    <div class="col-8" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black; text-align: end; font-weight: 600;">
+                        % UTILIDAD
+                    </div>
+                    <div class="col-2" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black;">
+                        <input type="number" class="input-cantidad" id="utilidad-porcentaje" value="0" onchange="changePorcentajeIndirecto()" onfocus="this.select();"/>
+                    </div>
+                    <div class="col-2" id="utilidad-total" style="font-size: 13px; font-weight: 500;color: black; font-weight: 600; text-align: end; margin-left: -5px;">
+                        0.00
+                    </div>
+                </div>
+                <div class="row" style="height: 30px; background-color: #b4bede; width: 100%; margin-left: 0px; border-radius: 5px; margin-bottom: 10px; border: solid 1px black;">
+                    <div class="col-10" style="font-size: 13px; font-weight: 500;color: black; text-align: end; font-weight: 600; align-content: center; font-weight: 700;">
+                        COSTOS INDIRECTOS
+                    </div>
+                    <div class="col-2" id="indirecto-total" style="font-size: 16px; font-weight: 500;color: black; font-weight: 600; text-align: end; align-content: center; font-weight: 700;">
+                        0.00
+                    </div>
+                </div>
                 
             </div>
 

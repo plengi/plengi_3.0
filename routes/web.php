@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
 	//ACTIVIDADES
 	Route::controller(ActividadesController::class)->group(function () {
 		Route::get('/actividades', 'index')->name('actividades');
+		Route::post('/actividades-create', 'create');
 		Route::get('/actividades-read', 'read');
 	});
 
