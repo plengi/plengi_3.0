@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->integer('id_apu');
             $table->integer('id_producto');
-            $table->integer('cantidad');
-            $table->integer('costo');
-            $table->integer('desperdicio');
-            $table->integer('rendimiento');
-            $table->integer('total');
+            $table->decimal('cantidad', 20)->default(0);
+            $table->decimal('cantidad_total', 20)->default(0);
+            $table->decimal('costo', 20)->default(0);
+            $table->decimal('desperdicio', 20)->default(0);
+            $table->decimal('rendimiento', 20)->default(0);
+            $table->decimal('distancia', 20)->default(0);
+            $table->decimal('prestaciones', 20)->default(0);
+            $table->decimal('total', 20)->default(0);
             $table->timestamps();
         });
     }
