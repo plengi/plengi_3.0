@@ -55,7 +55,7 @@
                 <p id="text-presupuesto-general" style="margin-bottom: 0px; text-align: center; background-color: #2d67ce; color: white; font-weight: bold; font-size: 18px; border-top-right-radius: 5px; border-top-left-radius: 5px;">
                     PRESUPUESTO GENERAL: 0,00
                 </p>
-                <div class="row">
+                <div class="row" style="width: 100%; margin-left: 0px;">
                     <div class="col-1" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black;">
                         Item
                     </div>
