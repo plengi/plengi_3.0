@@ -2,6 +2,37 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Dashboard'])
+
+    <style>
+        .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
+            font-size: 13px !important;
+        }
+
+        .select2-container--bootstrap-5 {
+            width: 100% !important;
+        }
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            margin-top: -5px;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection {
+            min-height: calc(1.0em + .75rem + 2px) !important;
+        }
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered .select2-selection__placeholder {
+            font-size: 13px;
+        }
+
+        .odd {
+            font-size: 12px;
+        }
+
+        .even {
+            font-size: 12px;
+        }
+    </style>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -108,6 +139,20 @@
             <div class="col-lg-7 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
+                        <h6 class="text-capitalize">Proyecto seleccionado: {{ $nombre_proyecto }}</h6>
+                        <p class="text-sm mb-0">
+                            <i class="fa fa-arrow-up text-success"></i>
+                            <span class="font-weight-bold">4% more</span> in 2021
+                        </p>
+                    </div>
+                    <div class="card-body p-3">
+                        <button id="createProyect" type="button" class="btn btn-primary">Crear Proyecto</button>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-lg-7 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100">
+                    <div class="card-header pb-0 pt-3 bg-transparent">
                         <h6 class="text-capitalize">Sales overview</h6>
                         <p class="text-sm mb-0">
                             <i class="fa fa-arrow-up text-success"></i>
@@ -120,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-5">
                 <div class="card card-carousel overflow-hidden h-100 p-0">
                     <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
@@ -172,11 +217,13 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-lg-7 mb-lg-0 mb-4">
+
+            @include('pages.proyecto-table')
+            <!-- <div class="col-lg-7 mb-lg-0 mb-4">
                 <div class="card ">
                     <div class="card-header pb-0 p-3">
                         <div class="d-flex justify-content-between">
-                            <h6 class="mb-2">Sales by Country</h6>
+                            <h6 class="mb-2">Proyectos creados</h6>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -310,7 +357,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-5">
                 <div class="card">
                     <div class="card-header pb-0 p-3">
@@ -392,91 +439,14 @@
         </div>
         @include('layouts.footers.auth.footer')
     </div>
+    
+    @include('pages.proyecto-form')
 @endsection
 
-@push('js')
-    <script src="./assets/js/plugins/chartjs.min.js"></script>
-    <script>
-        var ctx1 = document.getElementById("chart-line").getContext("2d");
 
-        var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+<script type="text/javascript" src="assets/js/sistema/jquery-3.5.1.js"></script>
+<script src="assets/js/sistema/jquery.dataTables.min.js"></script>
+<script src="assets/js/sistema/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="assets/js/componentes/dashboard.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
-        gradientStroke1.addColorStop(1, 'rgba(251, 99, 64, 0.2)');
-        gradientStroke1.addColorStop(0.2, 'rgba(251, 99, 64, 0.0)');
-        gradientStroke1.addColorStop(0, 'rgba(251, 99, 64, 0)');
-        new Chart(ctx1, {
-            type: "line",
-            data: {
-                labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                    label: "Mobile apps",
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#fb6340",
-                    backgroundColor: gradientStroke1,
-                    borderWidth: 3,
-                    fill: true,
-                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                    maxBarThickness: 6
-
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
-                },
-                scales: {
-                    y: {
-                        grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            padding: 10,
-                            color: '#fbfbfb',
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                    x: {
-                        grid: {
-                            drawBorder: false,
-                            display: false,
-                            drawOnChartArea: false,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            color: '#ccc',
-                            padding: 20,
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                },
-            },
-        });
-    </script>
-@endpush

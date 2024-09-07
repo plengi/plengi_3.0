@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+//MODELS
+use App\Models\User;
+use App\Models\Proyecto;
 
 class HomeController extends Controller
 {
@@ -21,8 +24,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('pages.dashboard');
+        $proyectoNombre = 'NINGUNO';
+        $usuario = User::find($request->user()->id);
+        if ($usuario->id_proyecto) {
+            $proyecto = Proyecto::find($usuario->id_proyecto);
+            $proyectoNombre = $proyecto->nombre;
+        }
+
+        $data = [
+            'nombre_proyecto' => $proyectoNombre
+        ];
+
+        return view('pages.dashboard', $data);
     }
 }

@@ -30,9 +30,10 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 //SISTEMA
 use App\Http\Controllers\APUController;
+use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\ProyectosController;
 use App\Http\Controllers\ActividadesController;
-
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -55,6 +56,19 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::delete('/actividades-delete', 'delete');
 	});
 
+	//UBICACION
+	Route::controller(UbicacionController::class)->group(function () {
+		Route::get('ciudades-combo', 'getCiudad');
+	});
+
+	//PROYECTOS
+	Route::controller(ProyectosController::class)->group(function () {
+		Route::get('proyecto', 'read');
+		Route::post('proyecto', 'create');
+		Route::post('proyecto-select', 'select');
+	});
+
+	//PRODUCTOS
 	Route::controller(ProductosController::class)->group(function () {
         //MATERIALES
 		Route::get('/materiales', 'indexMateriales')->name('materiales');
