@@ -38,161 +38,82 @@ let lenguajeDatatable = {
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
 }
-//TABLA APU
-actividades_table = $('#actividadesTable').DataTable({
-    pageLength: 15,
-    dom: 'Brtip',
-    paging: true,
-    responsive: false,
-    processing: true,
-    serverSide: true,
-    fixedHeader: true,
-    deferLoading: 0,
-    initialLoad: false,
-    language: lenguajeDatatable,
-    sScrollX: "100%",
-    fixedColumns : {
-        left: 0,
-        right : 1,
-    },
-    ajax:  {
-        type: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: 'actividades-read',
-        data: function ( d ) {
-            d.search = searchValueActividades;
-        }
-    },
-    columns: [
-        {"data":'nombre'},
-        {"data":'costo_directo', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
-        {"data":'costo_indirecto', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
-        {"data":'costo_total', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
-        {
-            "data": function (row, type, set){
-                var html = '';
-                html+= '<span id="editactividades_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-info edit-actividades" style="margin-bottom: 0rem !important; min-width: 50px;">Editar</span>&nbsp;';
-                html+= '<span id="deleteactividades_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-danger drop-actividades" style="margin-bottom: 0rem !important; min-width: 50px;">Eliminar</span>';
-                return html;
-            }
-        },
-    ]
-});
-//EDITAR ACTIVIDAD
-actividades_table.on('click', '.edit-actividades', function() {
-    clearFormActividad();
 
-    var id = this.id.split('_')[1];
-    var data = getDataById(id, actividades_table);
+//INICIAR ACTIVIDADES
+function initData () {
+    if (actividad_general) {
+        setTimeout(function(){
 
-    $("#actions-actividades-component").hide();
-    $("#table-actividades-component").hide();
-    $("#actions-actividades-create").show();
-    $("#create-actividades-component").show();
-
-    $("#crearActividades").hide();
-    $("#actualizarActividades").show();
-    $('#id_actividades_up').val(data.id);
-    $('#nombre_actividades').val(data.nombre);
-
-    itemsCostosIndirectos = [
-        { 'nombre': 'administracion', 'porcentaje': data.porcentaje_administracion, 'total': 0 },
-        { 'nombre': 'imprevistos', 'porcentaje': data.porcentaje_imprevistos, 'total': 0 },
-        { 'nombre': 'utilidad', 'porcentaje': data.porcentaje_utilidad, 'total': 0 },
-    ];
-
-    $("#administracion-porcentaje").val(parseInt(data.porcentaje_administracion));
-    $("#imprevistos-porcentaje").val(parseInt(data.porcentaje_imprevistos));
-    $("#utilidad-porcentaje").val(parseInt(data.porcentaje_utilidad));
-
-    //AGREGAR COMPONENTES
-    data.detalles.forEach(detalle => {
-        id_apu++;
-        console.log('detalle: ',detalle);
-        var tarjetaEncontrada = arrayTarjetas.find(tarjeta => tarjeta.codigo_tarjeta === detalle.codigo_tarjeta);
-        //AGREGAR TARJETAS
-        if (!tarjetaEncontrada) {
-            id_tarjeta++;
-            tarjetaEncontrada = {
-                'codigo_tarjeta': detalle.codigo_tarjeta,
-                'consecutivo': id_tarjeta,
-                'nombre': detalle.nombre_tarjeta,
-                'subtotal': 0,
-            }
-            arrayTarjetas.push(tarjetaEncontrada);
-            crearTarjetaHtml(detalle.nombre_tarjeta);
-        }
-        //AGREGAR APUS
-        let data = {
-            'id_tarjeta': tarjetaEncontrada.consecutivo,
-            'id_apu': detalle.id_apu,
-            'consecutivo': id_apu,
-            'nombre': detalle.apu.nombre,
-            'unidad_medida': detalle.apu.unidad_medida,
-            'cantidad': parseInt(detalle.cantidad),
-            'valor_unidad': detalle.apu.valor_total,
-            'valor_total': detalle.valor_total,
-        }
-        arrayApuUsados.push(data);
-        crearAPUItemHtml(data);
-    });
-    //CALCULAR TOTALES
-    actualizarOrdenItems();
-    calcularCostosDirectos();
-    calcularCostosIndirectos();
-    calcularTotal();
-});
-//DELETE ACTIVIDAD
-actividades_table.on('click', '.drop-actividades', function() {
-    var trActividad = $(this).closest('tr');
-    var id = this.id.split('_')[1];
-    var data = getDataById(id, actividades_table);
-
-    Swal.fire({
-        title: 'Eliminar Actividad: '+data.nombre+'?',
-        text: "No se podrá revertir!",
-        type: 'warning',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Borrar!',
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.value){
-            $.ajax({
-                url: 'actividades-delete',
-                method: 'DELETE',
-                data: JSON.stringify({id: id}),
-                headers: {
-                    "Content-Type": "application/json",
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                dataType: 'json',
-            }).done((res) => {
-                actividades_table.ajax.reload();
-                Swal.fire({
-                    title: "Actividad eliminado!",
-                    text: "La actividad "+data.nombre+" fue eliminadas con exito!",
-                    icon: "success",
-                    timer: 1500
-                })
-            }).fail((res) => {
-                Swal.fire({
-                    title: "Error!",
-                    text: "La actividad "+data.nombre+" no pudo ser eliminado!",
-                    icon: "error",
-                    timer: 1500
-                });
+            $('#crearActividades').hide();
+            $('#actualizarActividades').show();
+    
+            clearFormActividad();
+            var data = actividad_general;
+        
+            $("#actions-actividades-component").hide();
+            $("#table-actividades-component").hide();
+            $("#actions-actividades-create").show();
+            $("#create-actividades-component").show();
+        
+            $("#crearActividades").hide();
+            $("#actualizarActividades").show();
+            $('#id_actividades_up').val(data.id);
+            $('#nombre_actividades').val(data.nombre);
+        
+            itemsCostosIndirectos = [
+                { 'nombre': 'administracion', 'porcentaje': data.porcentaje_administracion, 'total': 0 },
+                { 'nombre': 'imprevistos', 'porcentaje': data.porcentaje_imprevistos, 'total': 0 },
+                { 'nombre': 'utilidad', 'porcentaje': data.porcentaje_utilidad, 'total': 0 },
+            ];
+        
+            $("#administracion-porcentaje").val(parseInt(data.porcentaje_administracion));
+            $("#imprevistos-porcentaje").val(parseInt(data.porcentaje_imprevistos));
+            $("#utilidad-porcentaje").val(parseInt(data.porcentaje_utilidad));
+        
+            //AGREGAR COMPONENTES
+            data.detalles.forEach(detalle => {
+                id_apu++;
+                var tarjetaEncontrada = arrayTarjetas.find(tarjeta => tarjeta.codigo_tarjeta === detalle.codigo_tarjeta);
+                //AGREGAR TARJETAS
+                if (!tarjetaEncontrada) {
+                    id_tarjeta++;
+                    tarjetaEncontrada = {
+                        'codigo_tarjeta': detalle.codigo_tarjeta,
+                        'consecutivo': id_tarjeta,
+                        'nombre': detalle.nombre_tarjeta,
+                        'subtotal': 0,
+                    }
+                    arrayTarjetas.push(tarjetaEncontrada);
+                    crearTarjetaHtml(detalle.nombre_tarjeta);
+                }
+                //AGREGAR APUS
+                let data = {
+                    'id_tarjeta': tarjetaEncontrada.consecutivo,
+                    'id_apu': detalle.id_apu,
+                    'consecutivo': id_apu,
+                    'nombre': detalle.apu.nombre,
+                    'unidad_medida': detalle.apu.unidad_medida,
+                    'cantidad': parseInt(detalle.cantidad),
+                    'valor_unidad': detalle.apu.valor_total,
+                    'valor_total': detalle.valor_total,
+                }
+                arrayApuUsados.push(data);
+                crearAPUItemHtml(data);
             });
-        }
-    });
-});
+            //CALCULAR TOTALES
+            actualizarOrdenItems();
+            calcularCostosDirectos();
+            calcularCostosIndirectos();
+            calcularTotal();
+        },100);
 
-actividades_table.ajax.reload();
+
+    } else {
+        $('#crearActividades').show();
+        $('#actualizarActividades').hide();
+    }
+}
+
 //INICIALIZAR SORTABLEJS
 setTimeout(function(){
     new Sortable(example5, {
@@ -493,7 +414,6 @@ $(".input-cantidad").on('keydown', function(event) {
 //METODO POST PARA CREAR ACTIVIDAD
 $(document).on('click', '#crearActividades', function () {
     let data = {
-        'nombre': $("#nombre_actividades").val(),
         'costo_directo': costoDirecto,
         'costo_indirecto': costoIndirecto,
         'costo_total': costoTotal,
@@ -501,7 +421,6 @@ $(document).on('click', '#crearActividades', function () {
         'indirectos': itemsCostosIndirectos
     }
 
-    $("#volverActividades").hide();
     $("#crearActividades").hide();
     $("#crearActividadesLoading").show();
 
@@ -515,10 +434,10 @@ $(document).on('click', '#crearActividades', function () {
         },
     }).done((res) => {
         if(res.success){
-            $("#volverActividades").show();
-            $("#crearActividades").show();
+            $("#id_actividades_up").val(res.data.id);
+            $("#crearActividades").hide();
+            $("#actualizarActividades").show();
             $("#crearActividadesLoading").hide();
-            volverActividades();
             Swal.fire({
                 title: "Actividad creada!",
                 text: "La Actividad fue creada con exito!",
@@ -527,7 +446,6 @@ $(document).on('click', '#crearActividades', function () {
             });
         }
     }).fail((err) => {
-        $("#volverActividades").show();
         $("#crearActividades").show();
         $("#crearActividadesLoading").hide();
         Swal.fire({
@@ -542,7 +460,6 @@ $(document).on('click', '#crearActividades', function () {
 $(document).on('click', '#actualizarActividades', function () {
     let data = {
         'id': $("#id_actividades_up").val(),
-        'nombre': $("#nombre_actividades").val(),
         'costo_directo': costoDirecto,
         'costo_indirecto': costoIndirecto,
         'costo_total': costoTotal,
@@ -550,7 +467,6 @@ $(document).on('click', '#actualizarActividades', function () {
         'indirectos': itemsCostosIndirectos
     }
 
-    $("#volverActividades").hide();
     $("#actualizarActividades").hide();
     $("#crearActividadesLoading").show();
 
@@ -564,10 +480,8 @@ $(document).on('click', '#actualizarActividades', function () {
         },
     }).done((res) => {
         if(res.success){
-            $("#volverActividades").show();
             $("#actualizarActividades").show();
             $("#crearActividadesLoading").hide();
-            volverActividades();
             Swal.fire({
                 title: "Actividad actualizada!",
                 text: "La Actividad fue actualizada con exito!",
@@ -576,7 +490,6 @@ $(document).on('click', '#actualizarActividades', function () {
             });
         }
     }).fail((err) => {
-        $("#volverActividades").show();
         $("#actualizarActividades").show();
         $("#crearActividadesLoading").hide();
         Swal.fire({
@@ -686,3 +599,5 @@ $(function () {
     });
 
 });
+
+initData();

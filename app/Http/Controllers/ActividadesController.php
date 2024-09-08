@@ -6,6 +6,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 //MODELS
+use App\Models\Proyecto;
 use App\Models\Actividades;
 use App\Models\ActividadDetalle;
 
@@ -26,7 +27,15 @@ class ActividadesController extends Controller
 
     public function index (Request $request)
     {
-        return view('sistema.actividades.actividades-view');
+        $actividad = Actividades::with('detalles.apu')
+            ->where('id_proyecto', $request->user()->id_proyecto)
+            ->first();
+
+        $data = [
+            'actividad' => $actividad,
+        ];
+
+        return view('sistema.actividades.actividades-view', $data);
     }
 
     public function read (Request $request)
@@ -78,7 +87,6 @@ class ActividadesController extends Controller
     public function create (Request $request)
     {
         $rules = [
-            'nombre' => 'required|min:1|max:200',
             'indirectos' => 'array|required',
             'tarjetas' => 'array|required',
         ];
@@ -93,8 +101,12 @@ class ActividadesController extends Controller
             ], 422);
         }
 
+        $proyecto = Proyecto::where('id', $request->user()->id_proyecto)
+            ->first();
+
         $actividades = Actividades::create([
-            'nombre' => $request->get('nombre'),
+            'id_proyecto' => $request->user()->id_proyecto,
+            'nombre' => $proyecto->nombre,
             'costo_directo' => $request->get('costo_directo'),
             'costo_indirecto' => $request->get('costo_indirecto'),
             'costo_total' => $request->get('costo_total'),
@@ -125,7 +137,7 @@ class ActividadesController extends Controller
 
         return response()->json([
             'success'=>	true,
-            'data' => '',
+            'data' => $actividades,
             'message'=> 'Actividad creada con exito!'
         ]);
     }
@@ -133,7 +145,6 @@ class ActividadesController extends Controller
     public function update (Request $request)
     {
         $rules = [
-            'nombre' => 'required|min:1|max:200',
             'indirectos' => 'array|required',
             'tarjetas' => 'array|required',
         ];
@@ -159,7 +170,6 @@ class ActividadesController extends Controller
         $actividades->costo_directo = $request->get('costo_directo');
         $actividades->costo_indirecto = $request->get('costo_indirecto');
         $actividades->costo_total = $request->get('costo_total');
-        $actividades->nombre = $request->get('nombre');
         $actividades->save();
 
         foreach ($request->get('tarjetas') as $tarjeta) {

@@ -1,4 +1,4 @@
-<div id="create-actividades-component" style="content-visibility: auto; overflow: auto; display: none;">
+<div id="create-actividades-component" style="content-visibility: auto; overflow: auto; display: block;">
 
     <div class="card mb-4">
         <div class="card-body">
@@ -7,16 +7,16 @@
 
                 <input type="text" class="form-control" name="id_actividades_up" id="id_actividades_up" style="display: none;">
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <!-- <div class="form-group col-12 col-sm-6 col-md-4">
                     <label for="example-text-input" class="form-control-label">Nombre Actividad</label>
                     <input type="text" class="form-control form-control-sm" name="nombre_actividades" id="nombre_actividades" onfocus="this.select();" required>
 
                     <div class="invalid-feedback">
                         El nombre es requerido
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <label for="exampleFormControlSelect1" style=" width: 100%;">Seleccione un APU</label>
                     <select class="form-control form-control-sm" name="id_apu" id="id_apu">
                     </select>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <label for="example-text-input" class="form-control-label">Agregar tarjeta</label>
                     <input type="text" class="form-control form-control-sm" name="nombre_tarjeta" id="nombre_tarjeta" onfocus="this.select();">
 

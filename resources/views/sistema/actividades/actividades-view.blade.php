@@ -115,20 +115,17 @@
     <div class="container-fluid py-4">
         <div class="row" style="z-index: 9;">
 
-            <div id="actions-actividades-component" class="row" style="z-index: 9;">
+            <!-- <div id="actions-actividades-component" class="row" style="z-index: 9;">
                 <div class="col-12 col-md-6 col-sm-6">
                     <button type="button" class="btn btn-success btn-sm" id="createActividades">Agregar Actividad</button>
                 </div>
                 <div class="col-12 col-md-6 col-sm-6">
                     <input type="text" id="searchInputActividades" class="form-control form-control-sm search-table" onkeydown="searchActividades(event)" placeholder="Buscar">
                 </div>
-            </div>
+            </div> -->
 
-            <div id="actions-actividades-create" class="row" style="z-index: 9; display: none;">
+            <div id="actions-actividades-create" class="row" style="z-index: 9; display: block;">
                 <div class="col-12 col-md-6 col-sm-6">
-                    <button type="button" class="btn btn-danger btn-sm" id="volverActividades" onclick="volverActividades()">
-                        Cancelar
-                    </button>
                     <button type="button" class="btn btn-success btn-sm" id="crearActividades">
                         Crear Actividad
                     </button>
@@ -136,26 +133,28 @@
                         Actualizar Actividad
                     </button>
                     <button id="crearActividadesLoading" class="btn btn-success btn-sm ms-auto" style="display:none;" disabled>
-                        Creando
+                        Cargando
                         <i class="fa fa-spinner fa-pulse"></i>
                     </button>
                 </div>
             </div>
 
 
-            <div id="table-actividades-component" class="card mb-4" style="content-visibility: auto; overflow: auto;">
+            <!-- <div id="table-actividades-component" class="card mb-4" style="content-visibility: auto; overflow: auto;">
                 <div class="card-body">
 
                     @include('sistema.actividades.actividades-table')
 
                 </div>
-            </div>
+            </div> -->
 
             @include('sistema.actividades.actividades-create')
 
         </div>
     </div>
-    
+    <script>
+        var actividad_general = JSON.parse('<?php echo $actividad; ?>');
+    </script>
     <script src="assets/js/sistema/jquery.dataTables.min.js"></script>
     <script src="assets/js/sistema/dataTables.bootstrap5.min.js"></script>
     <script type="text/javascript" src="assets/js/componentes/actividades.js"></script>
