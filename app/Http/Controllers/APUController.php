@@ -45,6 +45,7 @@ class APUController extends Controller
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
 
             $productos = Apu::orderBy($columnName,$columnSortOrder)
+                ->where('id_proyecto', $request->user()->id_proyecto)
                 ->with('detalles.producto');
 
             if ($request->get('search')) {
@@ -101,6 +102,7 @@ class APUController extends Controller
         }
 
         $apu = Apu::create([
+            'id_proyecto' => $request->user()->id_proyecto,
             'nombre' => $request->get('nombre'),
             'unidad_medida' => $request->get('unidad_medida'),
             'valor_total' => $request->get('varlor_total'),

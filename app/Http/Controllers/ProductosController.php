@@ -46,7 +46,8 @@ class ProductosController extends Controller
             $columnName = $columnName_arr[$columnIndex]['data']; // Column name
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
 
-            $productos = Productos::orderBy($columnName,$columnSortOrder);
+            $productos = Productos::orderBy($columnName,$columnSortOrder)
+                ->where('id_proyecto', $request->user()->id_proyecto);
 
             if ($request->get('search')) {
                 $productos->where('nombre', 'LIKE', '%'.$request->get('search').'%');
@@ -71,7 +72,6 @@ class ProductosController extends Controller
                 'message'=> 'Productos generados con exito!'
             ]);
 
-
         } catch (\Throwable $th) {
             return response()->json([
                 "success"=>false,
@@ -84,6 +84,7 @@ class ProductosController extends Controller
     public function create (Request $request)
     {
         $producto = Productos::create([
+            'id_proyecto' => $request->user()->id_proyecto,
             'tipo_proveedor' => $request->get('tipo_proveedor'),
             'nombre' => $request->get('nombre'),
             'unidad_medida' => $request->get('unidad_medida'),
