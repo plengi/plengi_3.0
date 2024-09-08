@@ -139,6 +139,79 @@
                 </div>
             </div>
 
+            <div id="actions-actividades-create" class="mb-4" style="z-index: 9; display: block;">
+                <div class="row">
+
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">PRESUPUESTO GENERAL</p>
+                                            <h5 id="presupuesto_general_card" class="font-weight-bolder">
+                                                $0,00
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS DIRECTOS</p>
+                                            <h5 id="costo_directo_card" class="font-weight-bolder">
+                                                $0,00
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                            <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS INDIRECTOS</p>
+                                            <h5 id="costo_indirecto_card" class="font-weight-bolder">
+                                                $0,00
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                            <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
 
             <!-- <div id="table-actividades-component" class="card mb-4" style="content-visibility: auto; overflow: auto;">
                 <div class="card-body">
@@ -148,7 +221,7 @@
                 </div>
             </div> -->
 
-            @include('sistema.actividades.actividades-create')
+            @include('sistema.actividades.actividades-create', ['actividad' => $actividad])
 
         </div>
     </div>

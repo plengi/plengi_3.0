@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 //MODELS
+use App\Models\Apu;
 use App\Models\User;
 use App\Models\Proyecto;
+use App\Models\Productos;
+use App\Models\ApuDetalle;
+use App\Models\Actividades;
+use App\Models\ActividadDetalle;
 
 class ProyectosController extends Controller
 {
@@ -82,6 +87,32 @@ class ProyectosController extends Controller
             'success'=>	true,
             'data' => '',
             'message'=> 'Proyecto seleccionado con exito!'
+        ]);
+    }
+
+    public function delete (Request $request)
+    {
+        $actividades = Actividades::where('id_proyecto', $request->get('id'))
+            ->get();
+
+        foreach ($actividades as $key => $actividad) {
+            ActividadDetalle::where('id_actividad', $actividad->id)->delete();
+        }
+
+        $apus = Apu::where('id_proyecto', $request->get('id'))
+            ->get();
+
+        foreach ($apus as $key => $apu) {
+            ApuDetalle::where('id_apu', $apu->id)->delete();
+        }
+
+        Proyecto::where('id', $request->get('id'))->delete();
+        Apu::where('id_proyecto', $request->get('id'))->delete();
+        Productos::where('id_proyecto', $request->get('id'))->delete();
+
+        return response()->json([
+            'success'=>	true,
+            'message'=> 'Proyecto eliminado con exito!'
         ]);
     }
 }

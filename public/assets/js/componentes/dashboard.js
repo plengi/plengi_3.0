@@ -133,7 +133,7 @@ $(function () {
                 "data": function (row, type, set){
                     var html = '<span id="selectproyecto_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-info select-proyecto" style="margin-bottom: 0rem !important; min-width: 50px;">Seleccionar</span>&nbsp;';
                     // html+= '<span id="editproyecto_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-info edit-proyecto" style="margin-bottom: 0rem !important; min-width: 50px;">Editar</span>&nbsp;';
-                    // html+= '<span id="deleteproyecto_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-danger drop-proyecto" style="margin-bottom: 0rem !important; min-width: 50px;">Eliminar</span>';
+                    html+= '<span id="deleteproyecto_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-danger drop-proyecto" style="margin-bottom: 0rem !important; min-width: 50px;">Eliminar</span>';
                     return html;
                 }
             },
@@ -178,6 +178,53 @@ $(function () {
 
     });
 
+    //CLICK BOTON DE ELIMINAR
+    proyectos_table.on('click', '.drop-proyecto', function() {
+        var trMaterial = $(this).closest('tr');
+        var id = this.id.split('_')[1];
+        var data = getDataById(id, proyectos_table);
+
+        Swal.fire({
+            title: 'Eliminar proyecto: '+data.nombre+'?',
+            html: "Se eliminaran todos los APU, Materiales, Equipos, Mano de obra y Transportes creados para este proyecto. <br/> Esta acción <b>No se podrá revertir!</b>",
+            type: 'warning',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Borrar!',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.value){
+                $.ajax({
+                    url: 'proyecto',
+                    method: 'DELETE',
+                    data: JSON.stringify({id: id}),
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                }).done((res) => {
+                    proyectos_table.row(trMaterial).remove().draw();
+                    Swal.fire({
+                        title: "Proyecto eliminado!",
+                        text: "El proyecto "+data.nombre+" fue eliminado con exito!",
+                        icon: "success",
+                        timer: 1500
+                    })
+                }).fail((res) => {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "El proyecto "+data.nombre+" no pudo ser eliminado!",
+                        icon: "error",
+                        timer: 1500
+                    });
+                });
+            }
+        });
+    });
+
     $('#id_ciudad').select2({
         theme: 'bootstrap-5',
         delay: 250,
@@ -214,3 +261,15 @@ $(function () {
 
     proyectos_table.ajax.reload();
 });
+
+//OBTENER DATOS DE LA TABLA
+function getDataById(idData, tabla) {
+    var data = tabla.rows().data();
+    for (let index = 0; index < data.length; index++) {
+        var element = data[index];
+        if(element.id == idData){
+            return element;
+        }
+    }
+    return false;
+}

@@ -360,7 +360,12 @@ function calcularCostosDirectos() {
             totalTarjeta
         ));
     }
+
     $("#directo-costo").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        costoDirecto
+    ));
+
+    $("#costo_directo_card").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         costoDirecto
     ));
 }
@@ -378,6 +383,9 @@ function calcularCostosIndirectos() {
         ));
     }
     $("#indirecto-total").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+        costoIndirecto
+    ));
+    $("#costo_indirecto_card").text(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         costoIndirecto
     ));
 }
@@ -399,8 +407,9 @@ function calcularTotal() {
     var textTotal = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         costoTotal
     );
-    $("#totalGeneralActividad").text(textTotal);
-    $("#text-presupuesto-general").text('PRESUPUESTO GENERAL: '+textTotal);
+    $("#presupuesto_general_card").text(textTotal);
+    $("#presupuesto_general_card").text(textTotal);
+
     
 }
 //CALCULAR 
@@ -520,11 +529,11 @@ function clearFormActividad() {
     calcularCostosIndirectos();
     $("#id_actividades_up").val('');
     $("#directo-costo").text('0,00');
-    $("#totalGeneralActividad").text('0,00');
+    $("#costo_directo_card").text('0,00');
+    $("#presupuesto_general_card").text('0,00');
     $("#administracion-porcentaje").val(0);
     $("#imprevistos-porcentaje").val(0);
     $("#utilidad-porcentaje").val(0);
-    $("#text-presupuesto-general").text('PRESUPUESTO GENERAL: 0,00');
 }
 
 //OBTENER DATOS DE LA TABLA
