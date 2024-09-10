@@ -31,8 +31,12 @@ class ActividadesController extends Controller
             ->where('id_proyecto', $request->user()->id_proyecto)
             ->first();
 
+        $proyecto = Proyecto::where('id', $request->user()->id_proyecto)
+            ->first();
+
         $data = [
             'actividad' => $actividad,
+            'proyecto' => $proyecto
         ];
 
         return view('sistema.actividades.actividades-view', $data);

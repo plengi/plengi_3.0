@@ -221,7 +221,7 @@
                 </div>
             </div> -->
 
-            @include('sistema.actividades.actividades-create', ['actividad' => $actividad])
+            @include('sistema.actividades.actividades-create', ['actividad' => $actividad, 'proyecto' => $proyecto])
 
         </div>
     </div>

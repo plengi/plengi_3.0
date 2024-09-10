@@ -43,7 +43,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">PRESUPUESTO GENERAL</p>
                                     <h5 id="total_presupesto_general" class="font-weight-bolder">
-                                        ${{ number_format($actividad->costo_total) }}
+                                        ${{ $actividad ? number_format($actividad->costo_total) : '0,00' }}
                                     </h5>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS DIRECTOS</p>
                                     <h5 id="costo_directo_general" class="font-weight-bolder">
-                                        ${{ number_format($actividad->costo_directo) }}
+                                        ${{ $actividad ? number_format($actividad->costo_directo) : '0,00' }}
                                     </h5>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS INDIRECTOS</p>
                                     <h5 id="costo_indirecto_general" class="font-weight-bolder">
-                                        ${{ number_format($actividad->costo_indirecto) }}
+                                        ${{ $actividad ? number_format($actividad->costo_indirecto) : '0,00' }}
                                     </h5>
                                 </div>
                             </div>
