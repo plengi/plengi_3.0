@@ -39,7 +39,7 @@ class HomeController extends Controller
 
             $ubicacion = $proyecto ? $proyecto->ciudad->nombre : 'SIN UBICACIÓN';
             $actividad = Actividades::where('id_proyecto', $usuario->id_proyecto)->first();
-            $proyectoNombre = $proyecto->nombre;
+            $proyectoNombre = $proyecto ? $proyecto->nombre : 'SIN PROYECTO';
         }
 
         $data = [
