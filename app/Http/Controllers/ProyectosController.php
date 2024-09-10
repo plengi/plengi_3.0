@@ -30,7 +30,8 @@ class ProyectosController extends Controller
             $columnName = $columnName_arr[$columnIndex]['data']; // Column name
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
 
-            $proyectos = Proyecto::orderBy($columnName,$columnSortOrder);
+            $proyectos = Proyecto::orderBy($columnName,$columnSortOrder)
+                ->with('ciudad', 'actividad');
 
             if ($request->get('search')) {
                 $proyectos->where('nombre', 'LIKE', '%'.$request->get('search').'%');

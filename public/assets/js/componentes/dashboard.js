@@ -127,8 +127,23 @@ $(function () {
         columns: [
             {"data":'nombre'},
             {"data":'tipo_obra'},
-            {"data":'id_ciudad'},
-            {"data":'fecha'},
+            {
+                "data": function (row, type, set){
+                    if (row.ciudad) {
+                        return row.ciudad.nombre
+                    }
+                    return '';
+                }
+            },
+            {
+                "data": function (row, type, set){
+                    if (row.actividad) {
+
+                        return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(row.actividad.costo_total);
+                    }
+                    return '0,00';
+                }
+            },
             {
                 "data": function (row, type, set){
                     var html = '<span id="selectproyecto_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-info select-proyecto" style="margin-bottom: 0rem !important; min-width: 50px;">Seleccionar</span>&nbsp;';
