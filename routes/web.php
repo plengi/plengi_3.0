@@ -34,6 +34,7 @@ use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProyectosController;
 use App\Http\Controllers\ActividadesController;
+use App\Http\Controllers\EmpleadosController;
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -67,6 +68,15 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('proyecto', 'create');
 		Route::post('proyecto-select', 'select');
 	});
+
+    //PRESTACIONES
+    Route::controller(EmpleadosController::class)->group(function() {
+        Route::get('/empleados', 'indexEmpleados')->name('empleados');
+        Route::get('/empleados-read', 'read')->name('empleados-read');
+        Route::post('/empleados-create', 'create')->name('empleados-create');
+        Route::put('/empleados-update', 'update')->name('empleados-update');
+        Route::delete('/empleados-delete', 'delete')->name('empleados-delete');
+    });
 
 	//PRODUCTOS
 	Route::controller(ProductosController::class)->group(function () {
