@@ -10,6 +10,7 @@ class Actividades extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_proyecto',
         'nombre',
         'costo_directo',
         'costo_indirecto',

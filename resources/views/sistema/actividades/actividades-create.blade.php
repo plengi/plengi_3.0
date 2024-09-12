@@ -1,4 +1,4 @@
-<div id="create-actividades-component" style="content-visibility: auto; overflow: auto; display: none;">
+<div id="create-actividades-component" style="content-visibility: auto; overflow: auto; display: block;">
 
     <div class="card mb-4">
         <div class="card-body">
@@ -7,16 +7,16 @@
 
                 <input type="text" class="form-control" name="id_actividades_up" id="id_actividades_up" style="display: none;">
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <!-- <div class="form-group col-12 col-sm-6 col-md-4">
                     <label for="example-text-input" class="form-control-label">Nombre Actividad</label>
                     <input type="text" class="form-control form-control-sm" name="nombre_actividades" id="nombre_actividades" onfocus="this.select();" required>
 
                     <div class="invalid-feedback">
                         El nombre es requerido
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <label for="exampleFormControlSelect1" style=" width: 100%;">Seleccione un APU</label>
                     <select class="form-control form-control-sm" name="id_apu" id="id_apu">
                     </select>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <label for="example-text-input" class="form-control-label">Agregar tarjeta</label>
                     <input type="text" class="form-control form-control-sm" name="nombre_tarjeta" id="nombre_tarjeta" onfocus="this.select();">
 
@@ -40,11 +40,6 @@
 
             </form>
 
-            <div style="place-content: center; display: flex; color: black; font-weight: bold;">
-                TOTAL ACTIVIDAD:&nbsp;
-                <div id="totalGeneralActividad">0,00</div>
-            </div>
-
         </div>
     </div>
 
@@ -53,7 +48,7 @@
 
             <div style="border-bottom: solid 1px;">
                 <p id="text-presupuesto-general" style="margin-bottom: 0px; text-align: center; background-color: #2d67ce; color: white; font-weight: bold; font-size: 18px; border-top-right-radius: 5px; border-top-left-radius: 5px;">
-                    PRESUPUESTO GENERAL: 0,00
+                    {{ $proyecto ? $proyecto->nombre : '¡SIN PROYECTO ASIGNADO!' }}
                 </p>
                 <div class="row" style="width: 100%; margin-left: 0px;">
                     <div class="col-1" style="font-size: 13px;border-right: solid 1px;font-weight: 500;color: black;">

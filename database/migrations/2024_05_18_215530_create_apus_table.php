@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('apus', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_proyecto')->nullable();
             $table->string('nombre', 200);
             $table->string('unidad_medida', 100)->nullable();
             $table->string('valor_total', 100)->nullable();

@@ -115,20 +115,17 @@
     <div class="container-fluid py-4">
         <div class="row" style="z-index: 9;">
 
-            <div id="actions-actividades-component" class="row" style="z-index: 9;">
+            <!-- <div id="actions-actividades-component" class="row" style="z-index: 9;">
                 <div class="col-12 col-md-6 col-sm-6">
                     <button type="button" class="btn btn-success btn-sm" id="createActividades">Agregar Actividad</button>
                 </div>
                 <div class="col-12 col-md-6 col-sm-6">
                     <input type="text" id="searchInputActividades" class="form-control form-control-sm search-table" onkeydown="searchActividades(event)" placeholder="Buscar">
                 </div>
-            </div>
+            </div> -->
 
-            <div id="actions-actividades-create" class="row" style="z-index: 9; display: none;">
+            <div id="actions-actividades-create" class="row" style="z-index: 9; display: block;">
                 <div class="col-12 col-md-6 col-sm-6">
-                    <button type="button" class="btn btn-danger btn-sm" id="volverActividades" onclick="volverActividades()">
-                        Cancelar
-                    </button>
                     <button type="button" class="btn btn-success btn-sm" id="crearActividades">
                         Crear Actividad
                     </button>
@@ -136,26 +133,101 @@
                         Actualizar Actividad
                     </button>
                     <button id="crearActividadesLoading" class="btn btn-success btn-sm ms-auto" style="display:none;" disabled>
-                        Creando
+                        Cargando
                         <i class="fa fa-spinner fa-pulse"></i>
                     </button>
                 </div>
             </div>
 
+            <div id="actions-actividades-create" class="mb-4" style="z-index: 9; display: block;">
+                <div class="row">
 
-            <div id="table-actividades-component" class="card mb-4" style="content-visibility: auto; overflow: auto;">
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">PRESUPUESTO GENERAL</p>
+                                            <h5 id="presupuesto_general_card" class="font-weight-bolder">
+                                                $0,00
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS DIRECTOS</p>
+                                            <h5 id="costo_directo_card" class="font-weight-bolder">
+                                                $0,00
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                            <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS INDIRECTOS</p>
+                                            <h5 id="costo_indirecto_card" class="font-weight-bolder">
+                                                $0,00
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                            <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- <div id="table-actividades-component" class="card mb-4" style="content-visibility: auto; overflow: auto;">
                 <div class="card-body">
 
                     @include('sistema.actividades.actividades-table')
 
                 </div>
-            </div>
+            </div> -->
 
-            @include('sistema.actividades.actividades-create')
+            @include('sistema.actividades.actividades-create', ['actividad' => $actividad, 'proyecto' => $proyecto])
 
         </div>
     </div>
-    
+    <script>
+        var actividad_general = JSON.parse('<?php echo $actividad; ?>');
+    </script>
     <script src="assets/js/sistema/jquery.dataTables.min.js"></script>
     <script src="assets/js/sistema/dataTables.bootstrap5.min.js"></script>
     <script type="text/javascript" src="assets/js/componentes/actividades.js"></script>

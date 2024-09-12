@@ -66,6 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::controller(ProyectosController::class)->group(function () {
 		Route::get('proyecto', 'read');
 		Route::post('proyecto', 'create');
+		Route::delete('proyecto', 'delete');
 		Route::post('proyecto-select', 'select');
 	});
 

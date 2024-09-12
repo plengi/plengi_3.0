@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('actividades', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_proyecto')->nullable();
             $table->string('nombre', 200);
             $table->decimal('costo_directo', 20)->default(0);
             $table->decimal('costo_indirecto', 20)->default(0);

@@ -10,6 +10,7 @@ class Apu extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_proyecto',
         'nombre',
         'unidad_medida',
         'valor_total',

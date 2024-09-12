@@ -41,14 +41,10 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
-                                    <h5 class="font-weight-bolder">
-                                        $53,000
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">PRESUPUESTO GENERAL</p>
+                                    <h5 id="total_presupesto_general" class="font-weight-bolder">
+                                        ${{ $actividad ? number_format($actividad->costo_total) : '0,00' }}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                        since yesterday
-                                    </p>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -66,14 +62,10 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
-                                    <h5 class="font-weight-bolder">
-                                        2,300
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS DIRECTOS</p>
+                                    <h5 id="costo_directo_general" class="font-weight-bolder">
+                                        ${{ $actividad ? number_format($actividad->costo_directo) : '0,00' }}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                        since last week
-                                    </p>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -91,14 +83,10 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
-                                    <h5 class="font-weight-bolder">
-                                        +3,462
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">COSTOS INDIRECTOS</p>
+                                    <h5 id="costo_indirecto_general" class="font-weight-bolder">
+                                        ${{ $actividad ? number_format($actividad->costo_indirecto) : '0,00' }}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                                        since last quarter
-                                    </p>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -116,13 +104,10 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
-                                    <h5 class="font-weight-bolder">
-                                        $103,430
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">UBICACIÓN</p>
+                                    <h5 id="ubicacicion_general" class="font-weight-bolder">
+                                        {{ $ubicacion }}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
-                                    </p>
                                 </div>
                             </div>
                             <div class="col-4 text-end">

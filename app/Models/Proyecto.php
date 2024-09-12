@@ -17,4 +17,14 @@ class Proyecto extends Model
         'nombre',
         'fecha',
 	];
+
+    public function ciudad()
+	{
+		return $this->belongsTo(Ciudades::class, 'id_ciudad');
+	}
+
+    public function actividad()
+	{
+		return $this->belongsTo(Actividades::class, 'id', 'id_proyecto');
+	}
 }
