@@ -1,5 +1,5 @@
 <div class="modal fade" id="empleadosFormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="textEmpleadosCreate" style="display: none;">Agregar empleado</h5>
@@ -13,7 +13,7 @@
 
                         <input type="text" class="form-control" name="id_empleado_up" id="id_empleado_up" style="display: none;">
 
-                        <div class="form-group col-12 col-sm-6 col-md-6">
+                        <div class="form-group col-12">
                             <label for="example-text-input" class="form-control-label">Nombre <span style="color: red">*</span></label>
                             <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" required>
 
@@ -22,7 +22,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group form-group col-12 col-sm-6 col-md-6">
+                        <div class="form-group form-group col-12">
                             <label for="exampleFormControlSelect1">Tipo <span style="color: red">*</span></label>
                             <select class="form-control form-control-sm" id="tipo" name="tipo">
                                 <option value="ml">MIN</option>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-12 col-sm-6 col-md-6">
+                        <div class="form-group col-12">
                             <label for="example-text-input" class="form-control-label">Salario <span style="color: red">*</span></label>
                             <input type="number" class="form-control form-control-sm" name="salario" id="salario" min="0" required>
 

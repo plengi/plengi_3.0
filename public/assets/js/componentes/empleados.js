@@ -58,6 +58,7 @@ empleados_table = $('#empleadosTable').DataTable({
         {
             "data": function (row, type, set){
                 var html = '';
+                html+= '<span id="prestacionesempleado_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-success prestaciones-empleado" style="margin-bottom: 0rem !important; min-width: 50px;">Prestaciones</span>&nbsp;';
                 html+= '<span id="editempleado_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-info edit-empleado" style="margin-bottom: 0rem !important; min-width: 50px;">Editar</span>&nbsp;';
                 html+= '<span id="deleteempleado_'+row.id+'" href="javascript:void(0)" class="btn badge bg-gradient-danger drop-empleado" style="margin-bottom: 0rem !important; min-width: 50px;">Eliminar</span>';
                 return html;
@@ -78,7 +79,7 @@ empleados_table.on('click', '.edit-empleado', function() {
     var id = this.id.split('_')[1];
     var data = getDataById(id, empleados_table);
 
-    $("#id_empleados_up").val(data.id);
+    $("#id_empleado_up").val(data.id);
     $("#nombre").val(data.nombre);
     $("#tipo").val(data.tipo);
     $("#salario").val(parseInt(data.salario));
@@ -242,7 +243,7 @@ $(document).on('click', '#updateEmpleado', function () {
         id: $("#id_empleado_up").val(),
         nombre: $("#nombre").val(),
         tipo: $("#tipo").val(),
-        salario: $("#salarioo").val(),
+        salario: $("#salario").val(),
     }
 
     $.ajax({
