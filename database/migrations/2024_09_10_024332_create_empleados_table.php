@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('empleados', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_proyecto')->nullable();
             $table->string("nombre", 200);
             $table->string("tipo");
             $table->decimal("salario", 20);

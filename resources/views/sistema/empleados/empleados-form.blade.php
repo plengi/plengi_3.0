@@ -13,7 +13,7 @@
 
                         <input type="text" class="form-control" name="id_empleado_up" id="id_empleado_up" style="display: none;">
 
-                        <div class="form-group col-12">
+                        <div class="form-group col-12 ">
                             <label for="example-text-input" class="form-control-label">Nombre <span style="color: red">*</span></label>
                             <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" required>
 
@@ -22,7 +22,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group form-group col-12">
+                        <div class="form-group form-group col-12 ">
                             <label for="exampleFormControlSelect1">Tipo <span style="color: red">*</span></label>
                             <select class="form-control form-control-sm" id="tipo" name="tipo">
                                 <option value="ml">MIN</option>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-12">
+                        <div class="form-group col-12 ">
                             <label for="example-text-input" class="form-control-label">Salario <span style="color: red">*</span></label>
                             <input type="number" class="form-control form-control-sm" name="salario" id="salario" min="0" required>
 
