@@ -29,7 +29,8 @@ class EmpleadosController extends Controller
             $columnName = $columnName_arr[$columnIndex]['data']; // Column name
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
 
-            $empleados = Empleado::orderBy($columnName,$columnSortOrder);
+            $empleados = Empleado::orderBy($columnName,$columnSortOrder)
+                ->where('id_proyecto', $request->user()->id_proyecto);
 
             if ($request->get('search')) {
                 $empleados->where('nombre', 'LIKE', '%'.$request->get('search').'%');
@@ -63,6 +64,7 @@ class EmpleadosController extends Controller
     public function create (Request $request)
     {
         $empleado = Empleado::create([
+            'id_proyecto' => $request->user()->id_proyecto,
             'nombre' => $request->get('nombre'),
             'tipo' => $request->get('tipo'),
             'salario' => $request->get('salario'),

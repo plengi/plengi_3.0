@@ -210,8 +210,8 @@ $(document).on('click', '#saveEmpleado', function () {
 
             empleados_table.ajax.reload();
             Swal.fire({
-                title: "Producto creado!",
-                text: "El producto fue creado con exito!",
+                title: "Empleado creado!",
+                text: "El Empleado fue creado con exito!",
                 icon: "success",
                 timer: 1500
             });
@@ -221,7 +221,7 @@ $(document).on('click', '#saveEmpleado', function () {
         $('#saveEmpleadoLoading').hide();
         Swal.fire({
             title: "Error!",
-            text: "Error al crear nuevo producto!",
+            text: "Error al crear nuevo Empleado!",
             icon: "error",
             timer: 1500
         });

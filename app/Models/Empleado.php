@@ -10,6 +10,7 @@ class Empleado extends Model
     use HasFactory;
 
     protected $fillable = [
+        "id_proyecto",
         "nombre",
         "tipo",
         "salario",
