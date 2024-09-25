@@ -540,6 +540,7 @@ function encontrarIndex (array, id) {
 }
 
 function addItemToTable (data, tipo) {
+    var unidadMedidaGeneral = $("#unidad_medida").val();
     if (tipo == 'equipos') {
         var html = `
             <td>${data.nombre_producto}</td>
@@ -551,7 +552,10 @@ function addItemToTable (data, tipo) {
                 data.costo,
             )}</td>
             <td style="padding: 3px 0px;">
-                <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            <div class="input-group">
+                <span style="height: 30px;"><p style="font-size: 11px; font-weight: bold; margin-top: -3px;">${unidadMedidaGeneral.toUpperCase()}/${data.unidad_medida.toUpperCase()}</p></span>
+                <input type="number" style="text-align: end; height: 30px; " class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+            </div>
             </td>
             <td id="total_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
                 data.costo_total,
@@ -607,7 +611,10 @@ function addItemToTable (data, tipo) {
                 data.costo_unitario,
             )}</td>
             <td style="padding: 3px 0px;">
-                <input type="number" style="text-align: end;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+                <div class="input-group">
+                    <span style="height: 30px;"><p style="font-size: 11px; font-weight: bold; margin-top: -3px;">${data.unidad_medida.toUpperCase()}/DÍA</p></span>
+                    <input type="number" style="text-align: end; height: 30px;" class="form-control form-control-sm" id="desperdicio_${tipo}_${data.consecutivo}" value="${data.porcentaje_rendimiento}" onfocus="this.select();" onchange="calcularProducto('${tipo}', ${data.consecutivo})">
+                </div>
             </td>
             <td id="total_${tipo}_${data.consecutivo}" style="text-align: end;" >${new Intl.NumberFormat('de-DE').format(
                 data.costo_total,

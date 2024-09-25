@@ -30,6 +30,7 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 //SISTEMA
 use App\Http\Controllers\APUController;
+use App\Http\Controllers\APGController;
 use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProyectosController;
@@ -45,6 +46,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/apu-read', 'read');
 		Route::delete('/apu-delete', 'delete');
 		Route::get('/apu-combo', 'combo');
+	});
+	Route::controller(APGController::class)->group(function () {
+		Route::get('/apg/{id}/{cantidad}/{nombreTarjeta}/{idActividad}', 'index')->name('apg');
+		Route::put('/apg', 'update');
 	});
 
 	//ACTIVIDADES

@@ -210,10 +210,15 @@ function crearAPUItemHtml (dataApu) {
                 dataApu.valor_unidad
             )}
         </div>
-        <div class="col-2 item-componente-2" id="total-apu-${id_apu}" style="text-align: end;">
-            ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-                dataApu.valor_total
-            )}
+        <div class="col-2 item-componente-2" >
+            <div style="position: absolute; background-color: #2d67ce; color: white; padding: 1px 5px 1px 5px; border-radius: 20px; cursor: pointer;" onclick="verApg(${dataApu.consecutivo})">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </div>
+            <div class="" id="total-apu-${id_apu}" style="text-align: end;"">
+                ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                    dataApu.valor_total
+                )}
+            </div>
         </div>
     `;
 
@@ -608,5 +613,21 @@ $(function () {
     });
 
 });
+
+function verApg(consecutivo) {
+    
+    for (let index = 0; index < arrayApuUsados.length; index++) {
+        var id_actividad = $("#id_actividades_up").val();
+        const element = arrayApuUsados[index];
+
+        var cantidad = $("#input-apu-"+consecutivo).val();
+        var tarjetaEncontrada = arrayTarjetas.find(tarjeta => tarjeta.consecutivo === element.id_tarjeta);
+        
+        if (element.consecutivo == consecutivo) {
+            window.open("/apg/"+element.id_apu+"/"+cantidad+"/"+tarjetaEncontrada.nombre+"/"+id_actividad, '_blank');
+        }
+    }
+
+}
 
 initData();

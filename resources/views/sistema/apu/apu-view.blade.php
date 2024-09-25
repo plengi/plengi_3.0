@@ -36,6 +36,40 @@
         .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered .select2-selection__placeholder {
             font-size: 13px;
         }
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-wrap: nowrap;
+        }
+
+        .input-group span {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+            color: #333;
+        }
+
+        .input-group input {
+            border: none;
+            padding: 10px;
+            outline: none;
+            flex: 1;
+        }
+
+        .input-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .input-group button:hover {
+            background-color: #45a049;
+        }
     </style>
 
     <script src="assets/js/sistema/jquery-3.5.1.js"></script>
