@@ -103,6 +103,31 @@
             text-align: center; background-color: #6d6d6d; color: #484848; font-weight: bold; font-size: 18px; height: 1px; margin-top: 1px; margin-bottom: 1px;
         }
 
+        .boton-flotante {
+            position: fixed;
+            display: none;
+            bottom: 90px;
+            right: 28px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+            z-index: 999;
+            width: 52px;
+            height: 52px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.16);
+            cursor: -webkit-grabbing;
+        }
+
+        .boton-flotante div {
+            border: none;
+            color: white;
+            padding: 15px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 50%; /* Botón redondo */
+            background-color: transparent; /* Fondo transparente */
+        }
+
     </style>
 
     <script src="assets/js/sistema/jquery-3.5.1.js"></script>
@@ -220,6 +245,12 @@
 
                 </div>
             </div> -->
+
+            <div id="dropZone" class="boton-flotante nested-sortable">
+                <div>
+                    <i style="font-size: 25px; margin-left: -15px; position: absolute; top: 50%; left: 80%; transform: translate(-50%, -50%);" class="fa fa-trash" aria-hidden="true"></i>
+                </div>
+            </div>
 
             @include('sistema.actividades.actividades-create', ['actividad' => $actividad, 'proyecto' => $proyecto])
 

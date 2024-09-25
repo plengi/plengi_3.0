@@ -122,7 +122,6 @@ setTimeout(function(){
         fallbackOnBody: true,
         swapThreshold: 0.65,
         onStart: function(evt) {
-            // Clona el estado inicial del DOM cuando se comienza a arrastrar
             el = document.getElementById('example5');
             initialState = el.cloneNode(true);
         },
@@ -328,11 +327,18 @@ function revertToInitialState(container) {
             fallbackOnBody: true,
             swapThreshold: 0.65,
             onStart: function(evt) {
+                // console.log('onStart: ',evt);
+                $("#dropZone").show();
                 // Clona el estado inicial del DOM cuando se comienza a arrastrar
                 el = document.getElementById('example5');
                 initialState = el.cloneNode(true);
             },
             onEnd: function (evt) {
+                var dropZone = document.getElementById('dropZone');
+                console.log('form: ',evt);
+                $("#dropZone").hide();
+
+                borrarItems();
                 actualizarOrdenItems();
                 calcularCostosDirectos();
             }
@@ -613,6 +619,26 @@ $(function () {
     });
 
 });
+
+function borrarItems() {
+    var tarjetas = $("#dropZone");
+
+    if (tarjetas.length) {
+        for (let i = 0; i < tarjetas.length; i++) {
+            let tarjeta = tarjetas[i];
+            let childrens = tarjeta.children;
+
+            for (let j = 0; j < childrens.length; j++) {
+                if (childrens[j].id) {
+                    childrens[j].remove();
+                }
+            }
+
+            console.log('childrens: ',childrens);
+            console.log('childrens.length: ',childrens.length);
+        }
+    }
+}
 
 function verApg(consecutivo) {
     
