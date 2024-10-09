@@ -23,6 +23,8 @@
 
     <link href="assets/css/sistema/dataTables.bootstrap5.min.css" rel="stylesheet" />
     <script src="assets/js/sistema/jquery-3.5.1.js"></script>
+    <!-- countUp -->
+    <script src="https://cdn.jsdelivr.net/npm/countup@1.8.2/dist/countUp.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

@@ -55,8 +55,17 @@ manoObras_table = $('#manoObrasTable').DataTable({
     columns: [
         {"data":'nombre'},
         {"data":'unidad_medida'},
-        {"data":'valor', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
-        {"data":'tipo_proveedor'},
+        {
+            "data": function (row, type, set){
+                var html = '';
+                html+= '<h5 id="valor_'+row.id+'" style="font-size: 14px; padding-bottom: 0px; margin-bottom: 0px; font-weight: 400;" >'+row.valor+'</h5>';
+                setTimeout(function(){
+                    var countUp = new CountUp('valor_'+row.id, 0, row.valor, 2, 0.5);
+                        countUp.start();
+                },100);
+                return html;
+            }, className: 'dt-body-right'
+        },
         {
             "data": function (row, type, set){
                 var html = '';

@@ -23,6 +23,8 @@
 
     <link href="assets/css/sistema/dataTables.bootstrap5.min.css" rel="stylesheet" />
     <script src="assets/js/sistema/jquery-3.5.1.js"></script>
+    <!-- countUp -->
+    <script src="https://cdn.jsdelivr.net/npm/countup@1.8.2/dist/countUp.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -50,6 +52,9 @@
 
     @include('sistema.transportes.transportes-form')
 
+    <script>
+        var cantidad_productos = '<?php echo $cantidad_productos; ?>';
+    </script>
     <script src="assets/js/sistema/jquery.dataTables.min.js"></script>
     <script src="assets/js/sistema/dataTables.bootstrap5.min.js"></script>
     <script type="text/javascript" src="assets/js/componentes/transportes.js"></script>

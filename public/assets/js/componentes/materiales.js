@@ -55,8 +55,52 @@ materiales_table = $('#materialesTable').DataTable({
     columns: [
         {"data":'nombre'},
         {"data":'unidad_medida'},
-        {"data":'valor', render: $.fn.dataTable.render.number(',', '.', 2, ''), className: 'dt-body-right'},
-        {"data":'tipo_proveedor'},
+        {
+            "data": function (row, type, set){
+                var html = '';
+                html+= '<h5 id="valor_'+row.id+'" style="font-size: 14px; padding-bottom: 0px; margin-bottom: 0px; font-weight: 400;" >'+row.valor+'</h5>';
+                setTimeout(function(){
+                    var countUp = new CountUp('valor_'+row.id, 0, row.valor, 2, 0.5);
+                        countUp.start();
+                },100);
+                return html;
+            }, className: 'dt-body-right'
+        },
+        {
+            "data": function (row, type, set){
+                var html = '';
+                html+= '<h5 id="cantidad_productos_'+row.id+'" style="font-size: 14px; padding-bottom: 0px; margin-bottom: 0px; font-weight: 400;" >'+row.cantidad_productos+'</h5>';
+                setTimeout(function(){
+                    var countUp = new CountUp('cantidad_productos_'+row.id, 0, row.cantidad_productos, 2, 0.5);
+                        countUp.start();
+                },100);
+                return html;
+            }, className: 'dt-body-right'
+        },
+        {
+            "data": function (row, type, set){
+                var html = '';
+                html+= '<h5 id="total_productos_'+row.id+'" style="font-size: 14px; padding-bottom: 0px; margin-bottom: 0px; font-weight: 400;" >'+row.total_productos+'</h5>';
+                setTimeout(function(){
+                    var countUp = new CountUp('total_productos_'+row.id, 0, row.total_productos, 2, 0.5);
+                        countUp.start();
+                },100);
+                return html;
+            }, className: 'dt-body-right'
+        },
+        {
+            "data": function (row, type, set){
+                var porcentaje = parseInt(row.cantidad_productos) / parseInt(cantidad_productos);
+                porcentaje = parseFloat(porcentaje * 100).toFixed(2);;
+
+                var html = `<div class="progress-wrapper">
+                    <div class="progress" style="height: 12px; height: 12px;margin-top: 5px;">
+                        <div class="progress-bar bg-dark progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${porcentaje}%;">${porcentaje}%</div>
+                    </div>
+                </div>`;
+                return html;
+            }
+        },
         {
             "data": function (row, type, set){
                 var html = '';

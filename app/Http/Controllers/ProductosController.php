@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 //MODELS
 use App\Models\Productos;
+use App\Models\ApuDetalle;
 
 class ProductosController extends Controller
 {
 
     public function indexMateriales (Request $request)
     {
-        return view('sistema.materiales.materiales-view');
+        $data = [
+            'cantidad_productos' => $this->totalProductos()
+        ];
+        return view('sistema.materiales.materiales-view', $data);
     }
 
     public function indexEquipos (Request $request)
     {
-        return view('sistema.equipos.equipos-view');
+        $data = [
+            'cantidad_productos' => $this->totalProductos()
+        ];
+        return view('sistema.equipos.equipos-view', $data);
     }
 
     public function indexManoObras (Request $request)
@@ -28,7 +35,10 @@ class ProductosController extends Controller
 
     public function indexTransportes (Request $request)
     {
-        return view('sistema.transportes.transportes-view');
+        $data = [
+            'cantidad_productos' => $this->totalProductos()
+        ];
+        return view('sistema.transportes.transportes-view', $data);
     }
 
     public function read (Request $request)
@@ -60,19 +70,55 @@ class ProductosController extends Controller
             $productosTotals = $productos->get();
 
             $productosPaginate = $productos->skip($start)
-                ->take($rowperpage);
+                ->take($rowperpage)
+                ->get();
+
+            $dataProductos = [];
+
+            foreach ($productosPaginate as $key => $producto) {
+                $totalProducto = DB::table('actividad_detalles AS ACD')
+                    ->leftJoin('apu_detalles AS APD', 'ACD.id_apu', '=', 'APD.id_apu')
+                    ->leftJoin('productos AS PR', 'APD.id_producto', '=', 'PR.id')
+                    ->select(
+                        DB::raw('MAX(ACD.id_apu) AS id_apu'), // Usando MAX para obtener un valor representativo
+                        'APD.id_producto',
+                        DB::raw('MAX(PR.valor) AS valor_producto'), // Usando MAX para el valor del producto
+                        DB::raw('SUM(CAST(APD.cantidad * ACD.cantidad AS DECIMAL(10, 2))) AS cantidad_productos'),
+                        DB::raw('SUM(CAST((APD.cantidad * ACD.cantidad) * PR.valor AS DECIMAL(10, 2))) AS total_productos')
+                    )
+                    ->where('APD.id_producto', $producto->id)
+                    ->groupBy('APD.id_producto')
+                    ->first();
+
+                $data = [
+                    "id" => $producto->id,
+                    "id_proyecto" => $producto->id_proyecto,
+                    "tipo_proveedor" => $producto->tipo_proveedor,
+                    "nombre" => $producto->nombre,
+                    "unidad_medida" => $producto->unidad_medida,
+                    "tipo_producto" => $producto->tipo_producto,
+                    "valor" => $producto->valor,
+                    "cantidad_productos" => $totalProducto ? $totalProducto->cantidad_productos : 0,
+                    "total_productos" => $totalProducto ? $totalProducto->total_productos : 0,
+                    "created_at" => $producto->created_at,
+                    "updated_at" => $producto->updated_at
+                ];
+
+                $dataProductos[] = $data;
+            }
 
             return response()->json([
                 'success'=>	true,
                 'draw' => $draw,
                 'iTotalRecords' => $productosTotals->count(),
                 'iTotalDisplayRecords' => $productosTotals->count(),
-                'data' => $productosPaginate->get(),
+                'data' => $dataProductos,
                 'perPage' => $rowperpage,
                 'message'=> 'Productos generados con exito!'
             ]);
 
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             return response()->json([
                 "success"=>false,
                 'data' => [],
@@ -145,6 +191,18 @@ class ProductosController extends Controller
         return $productos->paginate(40);
     }
 
+    private function totalProductos ()
+    {
+        $totalProducto = DB::table('actividad_detalles AS ACD')
+            ->leftJoin('apu_detalles AS APD', 'ACD.id_apu', '=', 'APD.id_apu')
+            ->leftJoin('productos AS PR', 'APD.id_producto', '=', 'PR.id')
+            ->select(
+                DB::raw('SUM(CAST(APD.cantidad * ACD.cantidad AS DECIMAL(10, 2))) AS cantidad_productos')
+            )
+            ->where('PR.tipo_producto', '!=', 2)
+            ->first();
 
+        return $totalProducto ? $totalProducto->cantidad_productos : 0;
+    }
 
 }
