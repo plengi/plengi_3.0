@@ -38,8 +38,9 @@
         }
     </style>
 
-    <script src="{{ url('assets/js/sistema/jquery-3.5.1.js') }} "></script>
-    <link href="{{ url('assets/css/sistema/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+
+    <script src="{{ secure_asset('assets/js/sistema/jquery-3.5.1.js') }} "></script>
+    <link href="{{ secure_asset('assets/css/sistema/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
@@ -64,8 +65,8 @@
         </div>
     </div>
     
-    <script src="{{ url('assets/js/sistema/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/dataTables.bootstrap5.min.js') }}"></script>
 
     <script>
         var apu = JSON.parse('<?php echo $apu; ?>');
@@ -74,7 +75,7 @@
         var idApu = JSON.parse('<?php echo $idApu; ?>');
     </script>
 
-    <script type="text/javascript" src="{{ url('assets/js/componentes/apg.js') }}"></script>
+    <script type="text/javascript" src="{{ secure_asset('assets/js/componentes/apg.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
     
