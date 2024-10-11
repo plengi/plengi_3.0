@@ -38,7 +38,7 @@ function mostrarAPG() {
                     'distancia': producto.distancia,
                     'costo_total': parseFloat(producto.total),
                     'cantidad_apg': producto.cantidad_total * cantidadGeneral,
-                    'costo_total_apg': parseFloat(producto.total)  * cantidadGenerals,
+                    'costo_total_apg': parseFloat(producto.total)  * cantidadGeneral,
                 }
                 arrayProductos.materiales.push(data);
                 addItemToTable(data, 'materiales');
