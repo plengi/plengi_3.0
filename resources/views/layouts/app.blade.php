@@ -12,18 +12,18 @@
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
-    <link href="{{ url('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- Font Awesome Icons -->
-    <link href="{{ url('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- CSS Files -->
-    <link id="pagestyle" href="{{ url('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
+    <link id="pagestyle" href="{{ secure_asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
     <!-- DATATABLE -->
-    <link href="{{ url('assets/css/sistema/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/css/sistema/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/sistema/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/sistema/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <!-- SELECT 2 -->
-    <link href="{{ url('assets/css/sistema/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/css/sistema/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/sistema/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ secure_asset('assets/css/sistema/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -39,7 +39,7 @@
             @if (!in_array(request()->route()->getName(), ['profile', 'profile-static']))
                 <div style="z-index: -1;" class="min-height-300 bg-primary position-absolute w-100"></div>
             @elseif (in_array(request()->route()->getName(), ['profile-static', 'profile']))
-                <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
+                <div class="position-absolute w-100 min-height-300 top-0" style="background-image: secure_asset('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
                     <span class="mask bg-primary opacity-6"></span>
                 </div>
             @endif
@@ -52,11 +52,11 @@
     @endauth
     
     <!--   Core JS Files   -->
-    <script src="{{ url('assets/js/core/popper.min.js') }}"></script>
-    <script src="{{ url('assets/js/core/bootstrap.min.js') }}"></script>
-    <script src="{{ url('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ url('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/jquery-3.5.1.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/jquery-3.5.1.js') }}"></script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -69,22 +69,22 @@
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ url('assets/js/argon-dashboard.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/argon-dashboard.js') }}"></script>
     <!-- DATATABLE -->
-    <script src="{{ url('assets/js/sistema/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ url('assets/js/sistema/dataTables.fixedColumns.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/dataTables.fixedColumns.min.js') }}"></script>
     <!-- SELECT 2  -->
-    <script src="{{ url('assets/js/sistema/select2.full.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/select2.full.min.js') }}"></script>
     <!-- VALIDATE -->
-    <script src="{{ url('assets/js/sistema/jquery.validate.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/jquery.validate.min.js') }}"></script>
     <!-- sweetalert2 -->
-    <script src="{{ url('assets/js/sistema/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema/sweetalert2.all.min.js') }}"></script>
 
-    <script src="{{ url('assets/js/sistema.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/sistema.js') }}"></script>
 </body>
 
 
