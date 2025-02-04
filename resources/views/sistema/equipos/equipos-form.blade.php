@@ -63,6 +63,7 @@
                     </div>
                 </form>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn bg-gradient-danger btn-sm" data-bs-dismiss="modal">Cancelar</button>
                 <button id="saveEquipo"type="button" class="btn bg-gradient-success btn-sm">Guardar</button>

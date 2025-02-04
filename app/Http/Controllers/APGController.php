@@ -45,11 +45,11 @@ class APGController extends Controller
     public function update (Request $request)
     {
         $rules = [
-            'id_apu' => 'required|exists:apus,id',
+            'id_apu' => 'required|exists:plengi.apus,id',
             'id_actividad' => 'required',
             'nombre' => 'required|min:1|max:200',
             'productos' => 'array|required',
-            'productos.*.id_producto' => 'required|exists:productos,id',
+            'productos.*.id_producto' => 'required|exists:plengi.productos,id',
             'productos.*.costo' => 'required|min:0',
             'productos.*.costo_total' => 'required|min:0',
             'productos.*.porcentaje_desperdicio' => 'required|min:0',

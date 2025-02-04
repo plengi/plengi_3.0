@@ -116,4 +116,19 @@ class ProyectosController extends Controller
             'message'=> 'Proyecto eliminado con exito!'
         ]);
     }
+
+    public function combo (Request $request)
+    {
+        $proyectos = Proyecto::select(
+            \DB::raw('*'),
+            \DB::raw("nombre as text")
+        );
+
+        if ($request->get("q")) {
+            $proyectos->where('nombre', 'LIKE', '%' . $request->get("q") . '%');
+        }
+
+        return $proyectos->orderBy('nombre', 'ASC')->paginate(40);
+    }
+
 }

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->integer('id_proyecto')->nullable();
+            $table->integer('id_empresa')->nullable();
             $table->string('username');
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('postal')->nullable();
             $table->text('about')->nullable();
+            $table->string('has_empresa', 100)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

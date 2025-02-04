@@ -9,6 +9,10 @@ class ActividadDetalle extends Model
 {
     use HasFactory;
 
+    protected $connection = 'plengi';
+
+    protected $table = 'actividad_detalles';
+
     protected $fillable = [
         'id_actividad',
         'codigo_tarjeta',

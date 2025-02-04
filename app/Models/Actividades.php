@@ -9,6 +9,10 @@ class Actividades extends Model
 {
     use HasFactory;
 
+    protected $connection = 'plengi';
+
+    protected $table = 'actividades';
+
     protected $fillable = [
         'id_proyecto',
         'nombre',

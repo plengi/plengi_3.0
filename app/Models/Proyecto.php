@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+//MODELS
+use App\Models\Clientes\Ciudades;
 
 class Proyecto extends Model
 {
     use HasFactory;
+
+	protected $connection = 'plengi';
 
     protected $table = 'proyectos';
 

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Equipos'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Empresas'])
 
     <style>
         tbody {
@@ -32,17 +32,17 @@
         <div class="row" style="z-index: 9;">
             <div class="row" style="z-index: 9;">
                 <div class="col-12 col-md-6 col-sm-6">
-                    <button type="button" class="btn btn-success btn-sm" id="createEquipo">Agregar equipos</button>
+                    <button type="button" class="btn btn-success btn-sm" id="createEmpresa">Crear empresa</button>
                 </div>
-                <div class="col-12 col-md-6 col-sm-6">
-                    <input type="text" id="searchInputEquipos" class="form-control form-control-sm search-table" onkeydown="searchEquipos(event)" placeholder="Buscar">
-                </div>
+                <!-- <div class="col-12 col-md-6 col-sm-6">
+                    <input type="text" id="searchInputManoObras" class="form-control form-control-sm search-table" onkeydown="searchManoObras(event)" placeholder="Buscar">
+                </div> -->
             </div>
 
             <div class="card mb-4" style="content-visibility: auto; overflow: auto;">
                 <div class="card-body">
 
-                    @include('sistema.equipos.equipos-table')
+                    @include('sistema.empresa.empresa-table')
 
                 </div>
             </div>
@@ -50,13 +50,10 @@
         </div>
     </div>
 
-    @include('sistema.equipos.equipos-form')
-
-    <script>
-        var cantidad_productos = '<?php echo $cantidad_productos; ?>';
-    </script>
+    @include('sistema.empresa.empresa-form')
+    
     <script src="assets/js/sistema/jquery.dataTables.min.js"></script>
     <script src="assets/js/sistema/dataTables.bootstrap5.min.js"></script>
-    <script type="text/javascript" src="assets/js/componentes/equipos.js"></script>
+    <script type="text/javascript" src="assets/js/componentes/empresas.js"></script>
 
 @endsection

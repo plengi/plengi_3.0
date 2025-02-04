@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+//MODELS
+use App\Models\Clientes\Empresa;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $connection = 'clientes';
+
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +34,8 @@ class User extends Authenticatable
         'city',
         'country',
         'postal',
+        'id_empresa',
+        'has_empresa',
         'about'
     ];
 
@@ -59,5 +67,10 @@ class User extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'id_empresa', 'id');
     }
 }

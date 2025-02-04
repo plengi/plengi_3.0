@@ -9,6 +9,10 @@ class Apu extends Model
 {
     use HasFactory;
 
+    protected $connection = 'plengi';
+
+    protected $table = 'apus';
+
     protected $fillable = [
         'id_proyecto',
         'nombre',

@@ -6,12 +6,13 @@
         <a class="navbar-brand m-0" href="{{ route('home') }}"
             target="_blank">
             <img src="./img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ms-1 font-weight-bold">PLENGI</span>
+            <span class="ms-1 font-weight-bold">{{ Auth::user()->empresa?->razon_social }}</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
     <div class="collapse navbar-collapse w-auto " id="sidenav-collapse-main" style="height: 100%;">
         <ul class="navbar-nav">
+            @if (Auth::user()->id_empresa)
             <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" href="{{ route('home') }}">
                     <div
@@ -21,7 +22,17 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
-            @if (Auth::user()->id_proyecto)
+            @endif
+            <li class="nav-item">
+                    <a class="nav-link {{ Route::currentRouteName() == 'empresas' ? 'active' : '' }}" href="{{ route('empresas') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Empresas</span>
+                    </a>
+                </li>
+            @if (Auth::user()->id_proyecto && Auth::user()->has_empresa)
                 <li class="nav-item">
                     <a class="nav-link {{ Route::currentRouteName() == 'actividades' ? 'active' : '' }}" href="{{ route('actividades') }}">
                         <div

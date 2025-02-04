@@ -9,6 +9,10 @@ class Productos extends Model
 {
     use HasFactory;
 
+    protected $connection = 'plengi';
+
+    protected $table = 'productos';
+
     protected $fillable = [
         'id_proyecto',
         'tipo_proveedor',

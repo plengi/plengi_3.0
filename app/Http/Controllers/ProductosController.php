@@ -76,7 +76,7 @@ class ProductosController extends Controller
             $dataProductos = [];
 
             foreach ($productosPaginate as $key => $producto) {
-                $totalProducto = DB::table('actividad_detalles AS ACD')
+                $totalProducto = DB::connection('plengi')->table('actividad_detalles AS ACD')
                     ->leftJoin('apu_detalles AS APD', 'ACD.id_apu', '=', 'APD.id_apu')
                     ->leftJoin('productos AS PR', 'APD.id_producto', '=', 'PR.id')
                     ->select(
@@ -118,7 +118,6 @@ class ProductosController extends Controller
             ]);
 
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             return response()->json([
                 "success"=>false,
                 'data' => [],
@@ -193,7 +192,7 @@ class ProductosController extends Controller
 
     private function totalProductos ()
     {
-        $totalProducto = DB::table('actividad_detalles AS ACD')
+        $totalProducto = DB::connection('plengi')->table('actividad_detalles AS ACD')
             ->leftJoin('apu_detalles AS APD', 'ACD.id_apu', '=', 'APD.id_apu')
             ->leftJoin('productos AS PR', 'APD.id_producto', '=', 'PR.id')
             ->select(
